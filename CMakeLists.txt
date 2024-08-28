@@ -1,3 +1,5 @@
+# This CMakeLists file will be change to be better in the future
+
 cmake_minimum_required(VERSION 3.0)
 
 project(KoiFish)

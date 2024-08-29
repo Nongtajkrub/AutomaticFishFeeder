@@ -1,25 +1,27 @@
 #include "timer.hpp"
 
+using namespace Time;
+
 NTPTimer::NTPTimer(WiFiUDP& udp, const char* pool, long off) :
     NTPClient(udp, pool, off)
 {
 	this->begin();
 } 
 
-String NTPTimer::time(TimeUnit unit) {
+String NTPTimer::time(Unit unit) {
     this->update();
 
     switch (unit) {
-		case TimeUnit::HOUR:
+		case Unit::HOUR:
 	    	return this->getFormattedTime().substring(0, 2);
-		case TimeUnit::MINUTE:
+		case Unit::MINUTE:
 	    	return this->getFormattedTime().substring(0, 5);
-		case TimeUnit::SECOND:
+		case Unit::SECOND:
 		default:
 	    	return this->getFormattedTime();
     }
 }
 
-void NTPTimer::print(TimeUnit unit) {
+void NTPTimer::print(Unit unit) {
     Serial.println(this->time(unit));
 }

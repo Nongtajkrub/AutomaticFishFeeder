@@ -7,29 +7,28 @@
 //#include "type.hpp"
 #include "timer.hpp"
 #include "reminder.hpp"
-//#include "ui.hpp"
+#include "ui.hpp"
 
 namespace Program {
 	class Runner {
 		private:
-			u8 last_err;
-
-			WiFiUDP udp;
-			NTPTimer *timer;
-			Reminder *remind;
-
-		public:
-			// take in ssid and password because it might need
-			// to be change offten
-			Runner(const String& wifi_s, const String& wifi_p);
-			~Runner();
+			// error
+			static u8 last_err;
+			// time
+			static WiFiUDP udp;
+			static Time::NTPTimer timer;
+			static Time::Reminder remind;
+			// ui
+			static LcdI2cUi::LcdI2cUi_Text welcom_txt;
 
 		public:
-			u8 main(u16 loop_delay);
+			Runner() { return; };
+			~Runner() = default;
 
-			u8 get_last_error();
+		public:
+			static void init_ui();
+			static u8 main();
 
-		private:
-			bool setup_wifi(const String& ssid, const String& pass);
+			static u8 get_last_error();
 	};
 }

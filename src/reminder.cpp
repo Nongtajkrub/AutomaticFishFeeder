@@ -1,6 +1,8 @@
 #include "reminder.hpp"
 
-Reminder::Reminder(NTPTimer* timer, u16 max_remind, TimeUnit time_unit) :
+using namespace Time;
+
+Reminder::Reminder(NTPTimer* timer, u16 max_remind, Unit time_unit) :
     timer(timer), max_remind(max_remind), time_unit(time_unit)
 {
     this->remind = new String[max_remind];

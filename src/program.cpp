@@ -12,38 +12,19 @@
 
 using namespace Program;
 
-Runner::Runner(const String& wifi_s, const String& wifi_p) {
-	this->last_err = NO_ERRPR;
-	if (!this->setup_wifi(wifi_s, wifi_p)) { return; }
-	this->timer = new NTPTimer(&this->udp, NTP_POOL, NTP_OFFSET);
-	this->remind = new Reminder(this->timer, MAX_REMIND, TimeUnit::MINUTE);
-}
+u8 Runner::last_err = 0;
+WiFiUDP Runner::udp;
+Time::NTPTimer Runner::timer(Runner::udp, NTP_POOL, NTP_OFFSET);
+Time::Reminder Runner::remind(&Runner::timer, MAX_REMIND, Time::Unit::MINUTE);
 
-Runner::~Runner() {
-	delete this->timer;
-	delete this->remind;
-}
-
-u8 Runner::main(u16 loop_delay) {
-	this->timer->print(TimeUnit::MINUTE);
-
-	delay(loop_delay);
-}
-
-bool Runner::setup_wifi(const String& ssid, const String& pass) {
-	u8 retry = 0;
+void Runner::init_ui() {
 	
-	WiFi.begin(ssid, pass);
-	while (WiFi.status() != WL_CONNECTED) {
-		if (retry >= MAX_WIFI_RETRY_CONNECT) {
-			this->last_err = WIFI_CONNECT_ERROR;
-			return false;
-		}
-		delay(1000);
-		retry++;
-	}
-
-	return true;
 }
 
-u8 Runner::get_last_error() { return this->last_err; }
+u8 Runner::main() {
+	Runner::timer.print(Time::Unit::MINUTE);
+
+	return 0;
+}
+
+u8 Runner::get_last_error() { return Runner::last_err; }

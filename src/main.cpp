@@ -8,7 +8,7 @@ char NETPIE_KEY[] = "383154ff-145e-4508-aaca-30283a119218";
 char NETPIE_SECRET[] = "MbkYJ1ujNVJdKQxPoiN9SNKdaQcZqXvu";
 char NETPIE_ALIAS[] = "esp8266";
 
-static void setup_wifi(const char* ssid, const char* pass) {
+static void setupWifi(const char* ssid, const char* pass) {
     delay(1000);
     Serial.println();
     Serial.print("Connecting to ");
@@ -28,7 +28,7 @@ static void setup_wifi(const char* ssid, const char* pass) {
 
 void setup() {
     Serial.begin(9600);
-	setup_wifi(WIFI_SSID, WIFI_PASS);
+	setupWifi(WIFI_SSID, WIFI_PASS);
 }
 
 WiFiClient wifi_client;

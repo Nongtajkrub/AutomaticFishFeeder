@@ -23,7 +23,7 @@ namespace _Servo {
 			void reset();
 
 		private:
-			void turn_forward(u16 degree);
-			void turn_backward(u16 degree);
+			void turnForward(u16 degree);
+			void turnBackward(u16 degree);
 	};
 }

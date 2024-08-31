@@ -30,7 +30,7 @@ LcdI2cUi_Option::LcdI2cUi_Option(LcdI2c *lcd, String text, u8 y) :
 }
 
 
-void LcdI2cUi_Option::move_cur_up() {
+void LcdI2cUi_Option::moveCursorUp() {
 	if (cursor_pos == 0) {
 		return;
 	}
@@ -39,7 +39,7 @@ void LcdI2cUi_Option::move_cur_up() {
 }
 
 
-void LcdI2cUi_Option::move_cur_down() {
+void LcdI2cUi_Option::moveCursorDown() {
 	if (cursor_pos == option_count) {
 		return;
 	}
@@ -47,6 +47,6 @@ void LcdI2cUi_Option::move_cur_down() {
 	cursor_pos++;
 }
 
-u8 LcdI2cUi_Option::get_cursor_pos() {
+u8 LcdI2cUi_Option::getCursorPos() {
 	return cursor_pos;
 }

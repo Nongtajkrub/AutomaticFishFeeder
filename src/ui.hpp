@@ -22,7 +22,7 @@ namespace LcdI2cUi {
 			~LcdI2cUiPar() = default;
 		
 		public:
-			virtual void set_pos(u8 x, u8 y) {
+			virtual void setPos(u8 x, u8 y) {
 				this->x = x;
 				this->y = y;
 			}
@@ -61,10 +61,10 @@ namespace LcdI2cUi {
 				}
 			}
 
-			void set_pos(u8 x, u8 y) override { return; }
+			void setPos(u8 x, u8 y) override { return; }
 
-			static void move_cur_up();
-			static void move_cur_down();
-			static u8 get_cursor_pos();
+			static void moveCursorUp();
+			static void moveCursorDown();
+			static u8 getCursorPos();
 	};
 }

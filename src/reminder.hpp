@@ -21,7 +21,7 @@ namespace Time {
 			bool check();
 
 		private:
-			bool is_dupe_remind(const String& time);
-			i32 find_remind(const String& time);
+			bool isDupeRemind(const String& time);
+			i32 findRemind(const String& time);
 	};
 };

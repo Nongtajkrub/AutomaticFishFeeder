@@ -28,9 +28,9 @@ namespace Program {
 			~Runner() = default;
 
 		public:
-			static void init_ui();
+			static void initUi();
 			static u8 main();
 
-			static u8 get_last_error();
+			static u8 getLastError();
 	};
 }

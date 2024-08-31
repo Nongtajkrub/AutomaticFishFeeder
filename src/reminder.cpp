@@ -15,12 +15,12 @@ Reminder::~Reminder() {
 u8 Reminder::add(const String& time) {
     i32 empty_remind;
 
-    if (is_dupe_remind(time)) {
+    if (isDupeRemind(time)) {
 		return 0;
     }
     
     // look for empty space in remind to store new remind
-    empty_remind = this->find_remind("");
+    empty_remind = this->findRemind("");
     // not enough space to store new remind
     if (empty_remind == -1) {
 		return 1;
@@ -31,7 +31,7 @@ u8 Reminder::add(const String& time) {
 }
 
 u8 Reminder::del(const String& time) {
-    i32 remind = this->find_remind(time);
+    i32 remind = this->findRemind(time);
    
     // the remind does not exsist cant be delete
     if (remind == -1) {
@@ -57,11 +57,11 @@ bool Reminder::check() {
     return false;
 }
 
-bool Reminder::is_dupe_remind(const String& time) {
-    return (this->find_remind(time) != -1) ? true : false;
+bool Reminder::isDupeRemind(const String& time) {
+    return (this->findRemind(time) != -1) ? true : false;
 }
 
-i32 Reminder::find_remind(const String& time) {
+i32 Reminder::findRemind(const String& time) {
     for (u16 i = 0; i < this->max_remind; i++) {
 		if (this->remind[i] == time) {
 			return i;

@@ -14,13 +14,13 @@ NetpieApi::NetpieApi(
 	microgear(wifi_client)
 {
 	// when new message
-	microgear.on(MESSAGE, handle_message);
+	microgear.on(MESSAGE, handleMessage);
 	// when found new gear
-	microgear.on(PRESENT, handle_found_gear);
+	microgear.on(PRESENT, handleFoundGear);
 	// when loss gear
-	microgear.on(ABSENT, handle_lost_gear);
+	microgear.on(ABSENT, handleLostGear);
 	// wehn connect to netpie
-	microgear.on(CONNECTED, handle_connect);
+	microgear.on(CONNECTED, handleConnect);
 
 	microgear.init(API_KEY, API_SECRET, ALIAS);
 	microgear.connect(APPID);
@@ -36,7 +36,7 @@ NetpieApi::NetpieApi(
 Event Netpie::event = Event::NONE;
 String Netpie::message_recv = "";
 
-void handle_message(char *topic, u8* msg, uint msglen) {
+void handleMessage(char *topic, u8* msg, uint msglen) {
 	msg[msglen] = '\0';
 	Netpie::message_recv = String((char*)msg);
 }

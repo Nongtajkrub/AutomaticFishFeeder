@@ -13,10 +13,10 @@ namespace Netpie {
 	extern Event event;
 	extern String message_recv;
 
-	void handle_message(char *topic, u8* msg, uint msglen); 
-	void handle_found_gear(char *attribute, u8* msg, uint msglen);
-	void handle_lost_gear(char* attribute, u8* msg, uint msglen);
-	void handle_connect(char* attribute, u8* msg, uint msglen);
+	void handleMessage(char *topic, u8* msg, uint msglen); 
+	void handleFoundGear(char *attribute, u8* msg, uint msglen);
+	void handleLostGear(char* attribute, u8* msg, uint msglen);
+	void handleConnect(char* attribute, u8* msg, uint msglen);
 
 	typedef struct NetpieApi {
 		MicroGear microgear;

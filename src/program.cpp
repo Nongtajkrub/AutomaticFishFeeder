@@ -12,10 +12,10 @@
 
 using namespace Program;
 
-u8 Runner::last_err = 0;
+u8 Runner::last_error = 0;
 WiFiUDP Runner::udp;
 Time::NTPTimer Runner::timer(Runner::udp, NTP_POOL, NTP_OFFSET);
-Time::Reminder Runner::remind(&Runner::timer, MAX_REMIND, Time::Unit::MINUTE);
+Time::Reminder Runner::reminder(&Runner::timer, MAX_REMIND, Time::Unit::MINUTE);
 
 void Runner::init_ui() {
 	
@@ -27,4 +27,4 @@ u8 Runner::main() {
 	return 0;
 }
 
-u8 Runner::get_last_error() { return Runner::last_err; }
+u8 Runner::get_last_error() { return Runner::last_error; }

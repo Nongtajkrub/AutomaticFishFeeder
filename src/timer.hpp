@@ -1,6 +1,7 @@
 #pragma once
 
 #include "type.hpp"
+
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 
@@ -13,7 +14,7 @@ namespace Time {
 
 	class NTPTimer : private NTPClient {
 		public:
-			NTPTimer(WiFiUDP& udp, const char* pool, long off); 
+			NTPTimer(WiFiUDP& udp, const char* pool, long offset); 
 			~NTPTimer() = default;
 
 		public:

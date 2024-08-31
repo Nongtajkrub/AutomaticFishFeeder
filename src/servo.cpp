@@ -10,37 +10,37 @@ ServoControl::ServoControl() :
 	this->reset();
 }
 
-void ServoControl::turn(u16 deg, Mode mode) {
+void ServoControl::turn(u16 degree, Mode mode) {
 	switch (mode) {
 		case Mode::HIGH_TOURQE:
-			if (deg > this->curr_deg) {
-				this->turn_forward(deg);
-			} else if (deg < this->curr_deg) {
-				this->turn_backward(deg);
+			if (degree > this->servo_degree) {
+				this->turn_forward(degree);
+			} else if (degree < this->servo_degree) {
+				this->turn_backward(degree);
 			} 
 			break;
 		case Mode::HIGH_SPEED:
-			this->write(deg);
+			this->write(degree);
 			break;
 	}
 
-	this->curr_deg = deg;
+	this->servo_degree = degree;
 }
 
 void ServoControl::reset() {
 	this->write(0);
-	this->curr_deg = 0;
+	this->servo_degree = 0;
 }
 
-void ServoControl::turn_forward(u16 deg) {
-	for (u16 i = this->curr_deg; i < deg; i++) {
+void ServoControl::turn_forward(u16 degree) {
+	for (u16 i = this->servo_degree; i < degree; i++) {
 		this->write(i);
 		delay(TURN_DELAY);
 	}
 }
 
-void ServoControl::turn_backward(u16 deg) {
-	for (i16 i = this->curr_deg; i >= deg; i--) {
+void ServoControl::turn_backward(u16 degree) {
+	for (i16 i = this->servo_degree; i >= degree; i--) {
 		this->write(i);
 		delay(TURN_DELAY);
 	}

@@ -2,8 +2,8 @@
 
 using namespace Time;
 
-NTPTimer::NTPTimer(WiFiUDP& udp, const char* pool, long off) :
-    NTPClient(udp, pool, off)
+NTPTimer::NTPTimer(WiFiUDP& udp, const char* pool, long offset) :
+    NTPClient(udp, pool, offset)
 {
 	this->begin();
 } 

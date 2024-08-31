@@ -4,6 +4,7 @@
 #pragma once
 
 #include "type.hpp"
+
 #include <LiquidCrystal_I2C.h>
 
 using LcdI2c = LiquidCrystal_I2C;
@@ -40,8 +41,8 @@ namespace LcdI2cUi {
 
 	class LcdI2cUi_Option : public LcdI2cUiPar {
 		private:
-			static u8 opt_count;
-			static u8 cur_pos;
+			static u8 option_count;
+			static u8 cursor_pos;
 			u8 id;
 
 		public:
@@ -51,7 +52,7 @@ namespace LcdI2cUi {
 		public:
 			void show() override {
 				this->lcd->setCursor(this->x, this->y);
-				if (this->id == this->cur_pos) {
+				if (this->id == this->cursor_pos) {
 					this->lcd->print(">");
 					this->lcd->setCursor(this->x + 1, this->y);
 					this->lcd->print(this->text);
@@ -64,6 +65,6 @@ namespace LcdI2cUi {
 
 			static void move_cur_up();
 			static void move_cur_down();
-			static u8 get_cur_pos();
+			static u8 get_cursor_pos();
 	};
 }

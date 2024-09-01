@@ -1,42 +1,47 @@
 #include "netpie.hpp"
+#include "core_esp8266_features.h"
 
-using namespace Netpie;
+#include <Arduino.h>
 
-NetpieApi::NetpieApi(
-	WiFiClient wifi_client,
-	char* SSID,
-	char* PASSWORD,
-	char* APPID,
-	char* API_KEY,
-	char* API_SECRET,
-	char* ALIAS
-	) :
-	microgear(wifi_client)
+// cant use "using namespace Netpie"
+
+Netpie::Client::Client(
+	WiFiClient &wifi_client,
+	const char* SERVER, 
+	const u16   PORT,
+	const char* CLIENT_ID,
+	const char* USERNAME,
+	const char* PASSWORD
+)
+	: m_client(wifi_client)
 {
-	// when new message
-	microgear.on(MESSAGE, handleMessage);
-	// when found new gear
-	microgear.on(PRESENT, handleFoundGear);
-	// when loss gear
-	microgear.on(ABSENT, handleLostGear);
-	// wehn connect to netpie
-	microgear.on(CONNECTED, handleConnect);
-
-	microgear.init(API_KEY, API_SECRET, ALIAS);
-	microgear.connect(APPID);
-
-	while (!microgear.connected()) {
-		delay(1000);
-		Serial.println("Connecting to Netpie");
-	}
-	Serial.println("Connected!");
-	this->connected = true;
+	m_client.setServer(SERVER, PORT);
+	m_client.setCallback(callback);
+	connectToNetpie(CLIENT_ID, USERNAME, PASSWORD);
 }
 
-Event Netpie::event = Event::NONE;
-String Netpie::message_recv = "";
+void Netpie::Client::connectToNetpie(
+	const char* CLIENT_ID,
+	const char* USERNAME,
+	const char* PASSWORD
+	) 
+{
+	Serial.println("Trying to connecte to Netpie ");
+	while (!m_client.connected())
+	{
+		if (m_client.connect(CLIENT_ID, USERNAME, PASSWORD))
+		{
+			Serial.println("Connected!");
+		} 
+		else
+		{
+			Serial.println("Fail to connect with Netpie");
+			delay(1000);
+		}
+	}
+}
 
-void handleMessage(char *topic, u8* msg, uint msglen) {
-	msg[msglen] = '\0';
-	Netpie::message_recv = String((char*)msg);
+void Netpie::Client::callback(char* topic, byte* payload, uint length) 
+{
+
 }

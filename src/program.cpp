@@ -10,21 +10,19 @@
 #define NO_ERRPR 0
 #define WIFI_CONNECT_ERROR 1
 
-using namespace Program;
+u8 Program::Runner::m_last_error = 0;
+WiFiUDP Program::Runner::m_udp;
+Time::NTPTimer Program::Runner::m_timer(m_udp, NTP_POOL, NTP_OFFSET);
+Time::Reminder Program::Runner::m_reminder(&m_timer, MAX_REMIND, Time::Unit::MINUTE);
 
-u8 Runner::last_error = 0;
-WiFiUDP Runner::udp;
-Time::NTPTimer Runner::timer(Runner::udp, NTP_POOL, NTP_OFFSET);
-Time::Reminder Runner::reminder(&Runner::timer, MAX_REMIND, Time::Unit::MINUTE);
-
-void Runner::initUi() {
+void Program::Runner::initUi() {
 	
 }
 
-u8 Runner::main() {
-	Runner::timer.print(Time::Unit::MINUTE);
+u8 Program::Runner::main() {
+	m_timer.print(Time::Unit::MINUTE);
 
 	return 0;
 }
 
-u8 Runner::getLastError() { return Runner::last_error; }
+u8 Program::Runner::getLastError() { return last_error; }

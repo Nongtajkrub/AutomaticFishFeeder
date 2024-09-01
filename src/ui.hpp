@@ -10,40 +10,40 @@
 using LcdI2c = LiquidCrystal_I2C;
 
 namespace LcdI2cUi {
-	class LcdI2cUiPar {
+	class LcdI2cUiParent {
 		protected:
-			LcdI2c *lcd;
-			u8 x = 0;
-			u8 y = 0;
-			String text;
+			LcdI2c *m_lcd;
+			u8 m_x = 0;
+			u8 m_y = 0;
+			String m_text;
 
 		public:
-			LcdI2cUiPar(LcdI2c *lcd, String text); 
-			~LcdI2cUiPar() = default;
+			LcdI2cUiParent(LcdI2c *lcd, String text); 
+			~LcdI2cUiParent() = default;
 		
 		public:
 			virtual void setPos(u8 x, u8 y) {
-				this->x = x;
-				this->y = y;
+				x = x;
+				y = y;
 			}
 			
 			virtual void show() {
-				this->lcd->setCursor(this->x, this->y);
-				this->lcd->print(this->text);
+				m_lcd->setCursor(m_x, m_y);
+				m_lcd->print(m_text);
 			}
 	};
 
-	class LcdI2cUi_Text : public LcdI2cUiPar {
+	class LcdI2cUi_Text : public LcdI2cUiParent {
 		public:
 			LcdI2cUi_Text(LcdI2c *lcd, String text);
 			~LcdI2cUi_Text() = default;
 	};
 
-	class LcdI2cUi_Option : public LcdI2cUiPar {
+	class LcdI2cUi_Option : public LcdI2cUiParent {
 		private:
 			static u8 option_count;
 			static u8 cursor_pos;
-			u8 id;
+			u8 m_id;
 
 		public:
 			LcdI2cUi_Option(LcdI2c *lcd, String text, u8 y);
@@ -51,13 +51,13 @@ namespace LcdI2cUi {
 
 		public:
 			void show() override {
-				this->lcd->setCursor(this->x, this->y);
-				if (this->id == this->cursor_pos) {
-					this->lcd->print(">");
-					this->lcd->setCursor(this->x + 1, this->y);
-					this->lcd->print(this->text);
+				m_lcd->setCursor(m_x, m_y);
+				if (m_id == cursor_pos) {
+					m_lcd->print(">");
+					m_lcd->setCursor(m_x + 1, m_y);
+					m_lcd->print(m_text);
 				} else {
-					this->lcd->print(this->text);
+					m_lcd->print(m_text);
 				}
 			}
 

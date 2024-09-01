@@ -43,5 +43,5 @@ void Netpie::Client::connectToNetpie(
 
 void Netpie::Client::callback(char* topic, byte* payload, uint length) 
 {
-
+	// TODO
 }

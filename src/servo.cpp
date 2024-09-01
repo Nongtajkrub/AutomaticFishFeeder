@@ -2,46 +2,44 @@
 
 #define TURN_DELAY 10
 
-using namespace _Servo;
-
-ServoControl::ServoControl() :
+_Servo::ServoControl::ServoControl() :
 	Servo()
 {
-	this->reset();
+	reset();
 }
 
-void ServoControl::turn(u16 degree, Mode mode) {
+void _Servo::ServoControl::turn(u16 degree, Mode mode) {
 	switch (mode) {
 		case Mode::HIGH_TOURQE:
-			if (degree > this->servo_degree) {
-				this->turnForward(degree);
-			} else if (degree < this->servo_degree) {
-				this->turnBackward(degree);
+			if (degree > m_servo_degree) {
+				turnForward(degree);
+			} else if (degree < m_servo_degree) {
+				turnBackward(degree);
 			} 
 			break;
 		case Mode::HIGH_SPEED:
-			this->write(degree);
+			write(degree);
 			break;
 	}
 
-	this->servo_degree = degree;
+	m_servo_degree = degree;
 }
 
-void ServoControl::reset() {
-	this->write(0);
-	this->servo_degree = 0;
+void _Servo::ServoControl::reset() {
+	write(0);
+	m_servo_degree = 0;
 }
 
-void ServoControl::turnForward(u16 degree) {
-	for (u16 i = this->servo_degree; i < degree; i++) {
-		this->write(i);
+void _Servo::ServoControl::turnForward(u16 degree) {
+	for (u16 i = m_servo_degree; i < degree; i++) {
+		write(i);
 		delay(TURN_DELAY);
 	}
 }
 
-void ServoControl::turnBackward(u16 degree) {
-	for (i16 i = this->servo_degree; i >= degree; i--) {
-		this->write(i);
+void _Servo::ServoControl::turnBackward(u16 degree) {
+	for (i16 i = m_servo_degree; i >= degree; i--) {
+		write(i);
 		delay(TURN_DELAY);
 	}
 }

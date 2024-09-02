@@ -1,36 +1,56 @@
-#include "program.hpp"
+//#include "program.hpp"
 
-// have to be done like this for Netpie to work. I hate it to
-char WIFI_SSID[40] = "Sunan_2.4G";
-char WIFI_PASS[40] = "0871691479";
-char NETPIE_APPID[40] = "P238758401044";
-char NETPIE_KEY[40] = "383154ff-145e-4508-aaca-30283a119218";
-char NETPIE_SECRET[40] = "MbkYJ1ujNVJdKQxPoiN9SNKdaQcZqXvu";
-char NETPIE_ALIAS[40] = "esp8266";
+#include "WiFiClient.h"
+#include "netpie.hpp"
 
-static void setupWifi(const char* ssid, const char* pass) {
-    delay(1000);
+#include <Arduino.h>
+#include <ESP8266WiFi.h>
+
+#define WIFI_SSID "Sunan_2.4G"
+#define WIFI_PASSWORD "0871691479"
+
+#define MQTT_SERVER "mqtt.netpie.io"
+#define MQTT_PORT 1883
+#define MQTT_CLIENT_ID "383154ff-145e-4508-aaca-30283a119218"
+#define MQTT_USERNAME "ANtvbF27EuP4o1fSjkjV9p3NY7vaJzD2"
+#define MQTT_PASSWORD "MbkYJ1ujNVJdKQxPoiN9SNKdaQcZqXvu"
+
+static void setupWifi(const char* ssid, const char* pass) 
+{
+    delay(500);
     Serial.println();
     Serial.print("Connecting to ");
     Serial.println(ssid);
 
     WiFi.begin(ssid, pass);
 
-    while (WiFi.status() != WL_CONNECTED) {
-	delay(500);
-	Serial.print(".");
+    while (WiFi.status() != WL_CONNECTED) 
+	{
+		delay(500);
+		Serial.print(".");
     }
 
-    Serial.println("Connected!");
-    Serial.println("IP Address: ");
-    Serial.println(WiFi.localIP().toString());
+    Serial.println("Connected to WiFi!");
 }
 
-void setup() {
+WiFiClient wifi_client;
+Netpie::Client netpie_client(wifi_client, MQTT_SERVER, MQTT_PORT);
+
+void setup() 
+{
     Serial.begin(9600);
-	setupWifi(WIFI_SSID, WIFI_PASS);
+	setupWifi(WIFI_SSID, WIFI_PASSWORD);
+	netpie_client.connect(MQTT_CLIENT_ID, MQTT_USERNAME, MQTT_PASSWORD);
 }
 
-void loop() {
+bool disconnected = false;
+
+void loop() 
+{
 	delay(1000);
+	if (!disconnected)
+	{
+		netpie_client.disconnect();
+		disconnected = true;
+	}
 }

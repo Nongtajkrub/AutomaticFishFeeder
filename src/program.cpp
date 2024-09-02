@@ -25,4 +25,4 @@ u8 Program::Runner::main() {
 	return 0;
 }
 
-u8 Program::Runner::getLastError() { return last_error; }
+u8 Program::Runner::getLastError() { return m_last_error; }

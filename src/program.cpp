@@ -1,28 +1,23 @@
 #include "program.hpp"
 
-#define NTP_POOL "th.pool.ntp.org"
-#define NTP_OFFSET 25200
+#define LOOP_DELAY 500
 
-#define MAX_REMIND 32
+//#define NTP_POOL "th.pool.ntp.org"
+//#define NTP_OFFSET 25200
 
-#define MAX_WIFI_RETRY_CONNECT 10
+Program::Runner::Runner(const struct Program::Data& data) :
+	m_data(data),
+	m_netpie(data.wifi_client, data.MQTT_SERVER, data.MQTT_PORT)
+{}
 
-#define NO_ERRPR 0
-#define WIFI_CONNECT_ERROR 1
-
-u8 Program::Runner::m_last_error = 0;
-WiFiUDP Program::Runner::m_udp;
-Time::NTPTimer Program::Runner::m_timer(m_udp, NTP_POOL, NTP_OFFSET);
-Time::Reminder Program::Runner::m_reminder(&m_timer, MAX_REMIND, Time::Unit::MINUTE);
-
-void Program::Runner::initUi() {
-	
+bool Program::Runner::setup()
+{
+	m_netpie.connect(m_data.CLIENT_ID, m_data.USERNAME, m_data.PASSWORD);
 }
 
-u8 Program::Runner::main() {
-	m_timer.print(Time::Unit::MINUTE);
+bool Program::Runner::loop()
+{
+	m_netpie.loop();
 
-	return 0;
+	delay(LOOP_DELAY);
 }
-
-u8 Program::Runner::getLastError() { return m_last_error; }

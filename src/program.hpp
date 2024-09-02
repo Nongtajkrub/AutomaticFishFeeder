@@ -4,31 +4,33 @@
 #include "reminder.hpp"
 #include "netpie.hpp"
 #include "ui.hpp"
+#include "netpie.hpp"
+#include "type.hpp"
 
-#include <Arduino.h>
-#include <ESP8266WiFi.h>
-#include <WiFiUdp.h>
+namespace Program 
+{
+	struct Data
+	{
+		const char* MQTT_SERVER;
+		const char* MQTT_CLIENT_ID;
+		const char* MQTT_USERNAME;
+		const char* MQTT_PASSWORD;
+		u16 MQTT_PORT;
 
-//#include "type.hpp"
+		WiFiClient wifi_client;
+	};
 
-namespace Program {
-	class Runner {
+	class Runner
+	{
 		private:
-			// error
-			static u8 m_last_error;
-			// time
-			static WiFiUDP m_udp;
-			static Time::NTPTimer m_timer;
-			static Time::Reminder m_reminder;
+			const struct Data m_data;
+			Netpie::Client m_netpie;
+		
+		public:
+			Runner(const struct Data& program_data);
 
 		public:
-			Runner() { return; };
-			~Runner() = default;
-
-		public:
-			static void initUi();
-			static u8 main();
-
-			static u8 getLastError();
+			bool setup();
+			bool loop();
 	};
 }

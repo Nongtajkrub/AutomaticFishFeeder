@@ -48,6 +48,7 @@ bool disconnected = false;
 void loop() 
 {
 	delay(1000);
+	netpie_client.loop();
 	if (!disconnected)
 	{
 		netpie_client.disconnect();

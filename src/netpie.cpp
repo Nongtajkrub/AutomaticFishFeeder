@@ -57,6 +57,8 @@ Netpie::ErrorCode Netpie::Client::sendData(const char* topic, const char* payloa
 	return ErrorCode::NONE;
 }
 
+void Netpie::Client::loop() { m_client.loop(); }
+
 /*
 void Netpie::Client::callback(char* topic, byte* payload, uint length) 
 {

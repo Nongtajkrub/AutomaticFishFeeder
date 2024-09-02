@@ -28,7 +28,8 @@ namespace Netpie
 			ErrorCode connect(const char* CLIENT_ID, const char* USERNAME, const char* PASSWORD);
 			void disconnect();
 			ErrorCode sendData(const char* topic, const char* payload);
-
+			void loop();
+		
 		private:
 			//static void callback(char* topic, byte* payload, uint length);
 	};

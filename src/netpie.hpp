@@ -3,34 +3,33 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
-namespace Netpie 
-{
-	enum class ErrorCode : u8 
-	{
+namespace Netpie {
+	enum class ErrorCode : u8 {
 		NONE,
 		CONNECT_FAIL,
-		ATTEMPT_SENT_DUPE_DATA,
-		DATA_DID_NOT_SEND
+		SEND_DATA_FAIL
 	};
 
-	class Client 
-	{
-		private:
-			PubSubClient m_client;
-			bool m_connected;
-			const char* m_last_payload;
+	class Client {
+	private:
+		PubSubClient client;
+		bool connected;
 
-		public:
-			Client(WiFiClient &wifi_client, const char* SERVER, const u16 PORT);
-			~Client() = default;
+	public:
+		Client(WiFiClient &wifi_client, const char* SERVER, const u16 PORT);
+		~Client() = default;
 
-		public:
-			ErrorCode connect(const char* CLIENT_ID, const char* USERNAME, const char* PASSWORD);
-			void disconnect();
-			ErrorCode sendData(const char* topic, const char* payload);
-			void loop();
+	public:
+		ErrorCode connect(
+			const char* CLIENT_ID, 
+			const char* USERNAME, 
+			const char* PASSWORD
+			);
+		void disconnect();
+		ErrorCode send_data(const char* topic, const char* payload);
+		void loop();
 		
-		private:
+	private:
 			//static void callback(char* topic, byte* payload, uint length);
 	};
 }

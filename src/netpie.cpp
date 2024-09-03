@@ -1,63 +1,57 @@
 #include "netpie.hpp"
 
 #include <Arduino.h>
+#include <string.h>
 
 #define MAX_CONNECT_RETRY_COUNT 10
 
-Netpie::Client::Client(WiFiClient &wifi_client, const char* SERVER, const u16 PORT)
-	: m_client(wifi_client)
-{
-	m_client.setServer(SERVER, PORT);
-	//m_client.setCallback(callback);
-}
-
-Netpie::ErrorCode Netpie::Client::connect(const char* CLIENT_ID, const char* USERNAME, const char* PASSWORD) 
-{
-	u16 retry_count = 0;
-
-	Serial.println("Trying to connecte to Netpie ");
-	while (!m_client.connected())
+namespace Netpie {
+	Client::Client(WiFiClient &wifi_client, const char* SERVER, const u16 PORT)
+		: client(wifi_client) 
 	{
-		if (retry_count >= MAX_CONNECT_RETRY_COUNT)
-		{
-			Serial.println("Fail to connect with Netpie");
-			return ErrorCode::CONNECT_FAIL;
-		}
+		this->client.setServer(SERVER, PORT);
+			//this->client.setCallback(callback);
+	}
 
-		if (m_client.connect(CLIENT_ID, USERNAME, PASSWORD))
-		{
-			Serial.println("Connected!");
-			return ErrorCode::NONE;
-		} 
-		else
-		{
-			Serial.println("Fail to connect with Netpie retrying");
+	ErrorCode Client::connect(
+		const char* CLIENT_ID,
+		const char* USERNAME,
+		const char* PASSWORD
+		) {
+		u16 retry_count = 0;
+
+		while (!this->client.connected()) {
+			if (retry_count >= MAX_CONNECT_RETRY_COUNT) {
+				return ErrorCode::CONNECT_FAIL;
+			}
+			if (this->client.connect(CLIENT_ID, USERNAME, PASSWORD)) {
+				this->connected = true;
+				return ErrorCode::NONE;
+			}
+
 			retry_count++;
 			delay(500);
 		}
+
+		// should not reach this point but if does assume failer
+		return ErrorCode::CONNECT_FAIL;
 	}
 
-	// should not reach this point but if does assume failer
-	return ErrorCode::CONNECT_FAIL;
+	void Client::disconnect() {
+		this->client.disconnect(); 
+		this->connected = false;
+	}
+
+	ErrorCode Client::send_data(const char* topic, const char* payload) {
+		if (!this->client.publish(topic, payload))  {
+			return ErrorCode::SEND_DATA_FAIL;
+		}
+
+		return ErrorCode::NONE;
+	}
+	
+	void Client::loop() { this->client.loop(); }
 }
-
-void Netpie::Client::disconnect() { m_client.disconnect(); }
-
-Netpie::ErrorCode Netpie::Client::sendData(const char* topic, const char* payload)
-{
-	if (payload == m_last_payload) 
-	{
-		return ErrorCode::ATTEMPT_SENT_DUPE_DATA;
-	}
-	if (!m_client.publish(topic, payload)) 
-	{
-		return ErrorCode::DATA_DID_NOT_SEND;
-	}
-
-	return ErrorCode::NONE;
-}
-
-void Netpie::Client::loop() { m_client.loop(); }
 
 /*
 void Netpie::Client::callback(char* topic, byte* payload, uint length) 

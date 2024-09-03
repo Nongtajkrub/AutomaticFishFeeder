@@ -19,6 +19,7 @@ include_directories(
     "C:/Users/tytgsjsn/.platformio/packages/framework-arduinoespressif8266/libraries/Servo/src"
     "C:/Users/tytgsjsn/.platformio/packages/framework-arduinoespressif8266/libraries/microgear-esp8266-arduino-1.2.4"
     "C:/Users/tytgsjsn/Documents/Arduino/libraries/PubSubClient-2.8.0/src"
+    "C:/Users/tytgsjsn/Documents/Arduino/libraries/Arduino_JSON-0.2.0/src"
     )
 
 add_executable(

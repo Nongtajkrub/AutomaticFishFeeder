@@ -1,23 +1,48 @@
 #include "program.hpp"
+#include "HardwareSerial.h"
 
-#define LOOP_DELAY 500
+#define LOOP_DELAY 10000
 
 //#define NTP_POOL "th.pool.ntp.org"
-//#define NTP_OFFSET 25200
+#define NTP_OFFSET 25200
 
-Program::Runner::Runner(const struct Program::Data& data) :
-	m_data(data),
-	m_netpie(data.wifi_client, data.MQTT_SERVER, data.MQTT_PORT)
-{}
+namespace Program {
+	Runner::Runner(const struct Data& program_data) :
+		wifi_client(),
+		program_data(program_data),
+		netpie_client(
+			this->wifi_client,
+			program_data.MQTT_SERVER,
+			program_data.MQTT_PORT
+			)
+	{}
 
-bool Program::Runner::setup()
-{
-	m_netpie.connect(m_data.CLIENT_ID, m_data.USERNAME, m_data.PASSWORD);
-}
+	void Runner::setup() {
+		this->netpie_client.connect(
+			this->program_data.MQTT_CLIENT_ID,
+			this->program_data.MQTT_USERNAME,
+			this->program_data.MQTT_PASSWORD
+			);
+	}
 
-bool Program::Runner::loop()
-{
-	m_netpie.loop();
+	void Runner::loop() {
+		this->netpie_client.loop();
 
-	delay(LOOP_DELAY);
+		if (this->netpie_client.send_data(
+				"@shadow/data/update",
+				"{\"humidity\": 10, \"temperature\": 10}"
+				) != Netpie::ErrorCode::NONE) {
+			this->status = Status::ERROR;
+		}
+
+		Serial.println("Sent data\n");
+
+		delay(LOOP_DELAY);
+	}
+	
+	void Runner::end() {
+		this->netpie_client.disconnect();
+	}
+
+	Status Runner::get_status() { return this->status; }
 }

@@ -1,57 +1,43 @@
-//#include "program.hpp"
-
-#include "WiFiClient.h"
-#include "netpie.hpp"
-
-#include <Arduino.h>
-#include <ESP8266WiFi.h>
+#include "program.hpp"
 
 #define WIFI_SSID "Sunan_2.4G"
 #define WIFI_PASSWORD "0871691479"
 
-#define MQTT_SERVER "mqtt.netpie.io"
-#define MQTT_PORT 1883
-#define MQTT_CLIENT_ID "383154ff-145e-4508-aaca-30283a119218"
-#define MQTT_USERNAME "ANtvbF27EuP4o1fSjkjV9p3NY7vaJzD2"
-#define MQTT_PASSWORD "MbkYJ1ujNVJdKQxPoiN9SNKdaQcZqXvu"
+#define STOP_LOOP() for (;;)
 
-static void setupWifi(const char* ssid, const char* pass) 
-{
-    delay(500);
-    Serial.println();
-    Serial.print("Connecting to ");
-    Serial.println(ssid);
-
-    WiFi.begin(ssid, pass);
-
-    while (WiFi.status() != WL_CONNECTED) 
-	{
+static void setup_wifi(const char* SSID, const char* PASS) {
+    WiFi.begin(SSID, PASS);
+    while (WiFi.status() != WL_CONNECTED) {
 		delay(500);
-		Serial.print(".");
     }
-
-    Serial.println("Connected to WiFi!");
 }
 
-WiFiClient wifi_client;
-Netpie::Client netpie_client(wifi_client, MQTT_SERVER, MQTT_PORT);
+const struct Program::Data program_data = {
+	.MQTT_SERVER = "mqtt.netpie.io",
+	.MQTT_CLIENT_ID = "383154ff-145e-4508-aaca-30283a119218",
+	.MQTT_USERNAME = "ANtvbF27EuP4o1fSjkjV9p3NY7vaJzD2",
+	.MQTT_PASSWORD = "MbkYJ1ujNVJdKQxPoiN9SNKdaQcZqXvu",
+	.MQTT_PORT = 1883,
+};
 
-void setup() 
-{
+Program::Runner program_runner(program_data);
+
+void setup() {
     Serial.begin(9600);
-	setupWifi(WIFI_SSID, WIFI_PASSWORD);
-	netpie_client.connect(MQTT_CLIENT_ID, MQTT_USERNAME, MQTT_PASSWORD);
+
+	setup_wifi(WIFI_SSID, WIFI_PASSWORD);
+	Serial.println("WiFi connected");
+
+	program_runner.setup();
+	Serial.println("Netpie connected");
 }
 
-bool disconnected = false;
-
-void loop() 
-{
-	delay(1000);
-	netpie_client.loop();
-	if (!disconnected)
-	{
-		netpie_client.disconnect();
-		disconnected = true;
+void loop() {
+	if (program_runner.get_status() != Program::Status::NONE) {
+		program_runner.end();
+		Serial.println("Something went wrong!");
+		STOP_LOOP();
+	} else {
+		program_runner.loop();
 	}
 }

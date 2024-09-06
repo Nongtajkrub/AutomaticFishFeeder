@@ -4,7 +4,7 @@
 
 #include <Servo.h>
 
-namespace _Servo {
+namespace MyServo {
 	enum class Mode {
 		HIGH_TOURQE,
 		HIGH_SPEED
@@ -23,7 +23,7 @@ namespace _Servo {
 			void reset();
 
 		private:
-			void turnForward(u16 degree);
-			void turnBackward(u16 degree);
+			void turn_forward(u16 degree);
+			void turn_backward(u16 degree);
 	};
 }

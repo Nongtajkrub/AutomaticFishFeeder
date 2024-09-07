@@ -1,3 +1,7 @@
+#include <Arduino.h>
+
+#ifdef RUN_PROGRAM
+
 #include "program.hpp"
 
 #define WIFI_SSID "Sunan_2.4G"
@@ -41,3 +45,17 @@ void loop() {
 		program_runner.loop();
 	}
 }
+
+#endif // #ifdef RUN_PROGRAM
+
+#ifndef RUN_PROGRAM
+
+void setup() {
+
+}
+
+void loop() {
+	delay(1000);
+}
+
+#endif // #ifndef RUN_PROGRAM

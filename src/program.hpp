@@ -24,8 +24,15 @@ namespace Program
 	class Runner {
 	private:
 		const struct Data& program_data;
+
+		// netpie
 		WiFiClient wifi_client;
 		Netpie::Client netpie_client;
+		String netpie_data;
+
+		// feeder
+		u8 food_remaining = 100;
+
 		Status status;
 
 	public:
@@ -36,5 +43,8 @@ namespace Program
 		void loop();
 		void end();
 		Status get_status();
+
+	private:
+		bool send_netpie_data();
 	};
 }

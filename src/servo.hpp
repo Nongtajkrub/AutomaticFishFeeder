@@ -6,8 +6,8 @@
 
 namespace MyServo {
 	enum class Mode {
-		HIGH_TOURQE,
-		HIGH_SPEED
+		TOURQE,
+		SPEED
 	};
 
 	class ServoControl : public Servo {

@@ -17,6 +17,20 @@ namespace Program {
 			)
 	{}
 
+	bool Runner::send_netpie_data() {
+		char msg[this->netpie_data.length() + 1];
+
+		this->netpie_data.toCharArray(msg, this->netpie_data.length() + 1);
+		if (this->netpie_client.send_data(
+				"@shadow/data/update",
+				msg
+				) != Netpie::ErrorCode::NONE) {
+			return false;
+		}
+
+		return true;
+	}
+
 	void Runner::setup() {
 		this->netpie_client.connect(
 			this->program_data.MQTT_CLIENT_ID,
@@ -28,14 +42,9 @@ namespace Program {
 	void Runner::loop() {
 		this->netpie_client.loop();
 
-		if (this->netpie_client.send_data(
-				"@shadow/data/update",
-				"{\"humidity\": 10, \"temperature\": 10}"
-				) != Netpie::ErrorCode::NONE) {
+		if (!this->send_netpie_data()) {
 			this->status = Status::ERROR;
 		}
-
-		Serial.println("Sent data\n");
 
 		delay(LOOP_DELAY);
 	}

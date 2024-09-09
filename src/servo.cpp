@@ -11,14 +11,14 @@ namespace MyServo {
 
 	void ServoControl::turn(u16 degree, Mode mode) {
 		switch (mode) {
-			case Mode::HIGH_TOURQE:
+			case Mode::TOURQE:
 				if (degree > m_servo_degree) {
 					turn_forward(degree);
 				} else if (degree < m_servo_degree) {
 					turn_backward(degree);
 				} 
 				break;
-			case Mode::HIGH_SPEED:
+			case Mode::SPEED:
 				write(degree);
 				break;
 		}

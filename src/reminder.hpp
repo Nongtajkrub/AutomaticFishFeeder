@@ -1,3 +1,5 @@
+#pragma once
+
 #include "type.hpp"
 #include "timer.hpp"
 
@@ -6,18 +8,18 @@
 namespace Time {
 	class Reminder {
 		private:
-			NTPTimer* m_timer;
-			String* m_remind;
-			u16 m_max_remind;
-			Unit m_time_unit;
+			NTPTimer *const timer;
+			String* reminders;
+			u16 max_reminders;
+			Unit time_unit;
 
 		public:
-			Reminder(NTPTimer* timer, u16 remind_count, Unit time_unit); 
+			Reminder(NTPTimer *const timer, u16 remind_count, Unit time_unit); 
 			~Reminder();
 
 		public:
-			u8 add(const String& time);
-			u8 del(const String& time);
+			bool add(const String& time);
+			bool del(const String& time);
 			bool check();
 
 		private:

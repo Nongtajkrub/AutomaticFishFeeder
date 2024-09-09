@@ -1,21 +1,10 @@
 #pragma once
 
-#include "timer.hpp"
-#include "reminder.hpp"
-#include "ui.hpp"
-#include "netpie.hpp"
-#include "type.hpp"
+#include "program_data.hpp"
+#include "feeder.hpp"
 
 namespace Program 
 {
-	struct Data {
-		const char* MQTT_SERVER;
-		const char* MQTT_CLIENT_ID;
-		const char* MQTT_USERNAME;
-		const char* MQTT_PASSWORD;
-		const u16 MQTT_PORT;
-	};
-
 	enum class Status {
 		NONE,
 		ERROR
@@ -26,12 +15,13 @@ namespace Program
 		const struct Data& program_data;
 
 		// netpie
+		/*
 		WiFiClient wifi_client;
 		Netpie::Client netpie_client;
 		String netpie_data;
+		*/
 
-		// feeder
-		u8 food_remaining = 100;
+		Feeder feeder;
 
 		Status status;
 
@@ -45,6 +35,6 @@ namespace Program
 		Status get_status();
 
 	private:
-		bool send_netpie_data();
+		//bool send_netpie_data();
 	};
 }

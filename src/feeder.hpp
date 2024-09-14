@@ -3,6 +3,7 @@
 #include "program_data.hpp"
 #include "servo.hpp"
 #include "reminder.hpp"
+#include "netpie.hpp"
 #include "type.hpp"
 
 namespace Program {
@@ -25,11 +26,13 @@ namespace Program {
 		u16 feeding_before_empty;
 		// how much the servo have to turn to discharge the food
 		u16 servo_discharge_angle;
+		
 		MyServo::ServoControl servo_controler;
 		Time::Reminder reminder;
+		Netpie& netpie;
 
 	public:
-		Feeder(const struct Data& program_data);
+		Feeder(const struct Data& program_data, Netpie& netpie);
 		~Feeder() = default;
 	
 	public:

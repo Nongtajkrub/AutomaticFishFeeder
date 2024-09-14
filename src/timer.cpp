@@ -1,13 +1,13 @@
 #include "timer.hpp"
 
 namespace Time {
-	NTPTimer::NTPTimer(WiFiUDP& udp, const char* pool, long offset) :
+	Timer::Timer(WiFiUDP& udp, const char* pool, long offset) :
 		NTPClient(udp, pool, offset)
 	{
 		begin();
 	} 
 
-	String NTPTimer::time(Unit unit) {
+	String Timer::time(Unit unit) {
 		update();
 
 		switch (unit) {
@@ -21,7 +21,11 @@ namespace Time {
 		}
 	}
 
-	void NTPTimer::print(Unit unit) {
+	u8 Timer::day(){
+		return getDay(); 
+	}
+
+	void Timer::print(Unit unit) {
 		Serial.println(time(unit));
 	}
 }

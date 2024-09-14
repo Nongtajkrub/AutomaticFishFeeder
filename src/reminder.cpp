@@ -1,14 +1,26 @@
 #include "reminder.hpp"
 
 namespace Time {
-	Reminder::Reminder(NTPTimer *const timer, u16 max_remind, Unit time_unit) :
-		timer(timer), max_reminders(max_remind), time_unit(time_unit)
+	Reminder::Reminder(Timer *const timer, u16 max_reminders) :
+		timer(timer),
+		max_reminders(max_reminders),
+		current_day(this->timer->day()),
+		last_trigger("")
 	{
-		this->reminders = new String[max_remind];
+		this->reminders = new String[max_reminders];
 	}
 
 	Reminder::~Reminder() {
 		delete[] this->reminders;
+	}
+
+	void Reminder::loop() {
+		u8 new_day = this->timer->day();
+
+		// the day has change
+		if (current_day != new_day) {
+			last_trigger.clear();
+		}
 	}
 
 	bool Reminder::add(const String& time) {
@@ -42,9 +54,25 @@ namespace Time {
 	}
 
 	bool Reminder::check() {
-		// check whether any reminder time is the same as the current time
-		// if yes return true else return false
-		return (find_remind(this->timer->time(this->time_unit)) != -1);
+		i32 reminder = find_remind(this->timer->time(Unit::MINUTE));
+
+		// a reminder was trigger and have never been trigger today
+		if (reminder != -1 && this->reminders[reminder] != this->last_trigger) {
+			last_trigger = this->reminders[reminder];
+			// delete the reminder after being trigger
+			del(reminder);
+			return true;
+		}
+		// no reminder was trigger
+		return false;
+	}
+
+	const String& Reminder::get_last_trigger() {
+		return this->last_trigger;
+	}
+
+	void Reminder::del(u16 reminder) {
+		this->reminders[reminder].clear();
 	}
 
 	bool Reminder::is_dupe_remind(const String& time) {

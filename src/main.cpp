@@ -22,7 +22,7 @@ static void setup_wifi(const char* SSID, const char* PASS) {
 }
 
 WiFiUDP udp;
-Time::NTPTimer timer(udp, NTP_POOL, NTP_OFFSET);
+Time::Timer timer(udp, NTP_POOL, NTP_OFFSET);
 
 const struct Program::Data program_data = {
 	.MQTT_SERVER = "mqtt.netpie.io",
@@ -36,9 +36,9 @@ const struct Program::Data program_data = {
 	.SERVO_DISCHARGE_ANGLE = 90,
 	.SERVO_PIN = 13,
 	.TIMER = &timer,
-	.FEEDING_TIME1 = "21:15",
-	.FEEDING_TIME2 = NULL,
-	.FEEDING_TIME3 = NULL,
+	.FEEDING_TIME1 = "19:03",
+	.FEEDING_TIME2 = "19:05",
+	.FEEDING_TIME3 = "19:07",
 	.FEEDING_TIME4 = NULL,
 	.FEEDING_TIME5 = NULL
 };
@@ -74,7 +74,7 @@ void setup() {
 }
 
 void loop() {
-	delay(1000);
+	delay(1000);	
 }
 
 #endif // #ifndef RUN_PROGRAM

@@ -17,7 +17,7 @@ namespace Program {
 		const u16 FEEDING_BEFORE_EMPTY;
 		const u16 SERVO_DISCHARGE_ANGLE;
 		const u8 SERVO_PIN;
-		Time::NTPTimer *const TIMER;
+		Time::Timer *const TIMER;
 		const char* FEEDING_TIME1;
 		const char* FEEDING_TIME2;
 		const char* FEEDING_TIME3;

@@ -7,23 +7,28 @@
 
 namespace Time {
 	class Reminder {
-		private:
-			NTPTimer *const timer;
-			String* reminders;
-			u16 max_reminders;
-			Unit time_unit;
+	private:
+		Timer *const timer;
+		u8 current_day;
 
-		public:
-			Reminder(NTPTimer *const timer, u16 remind_count, Unit time_unit); 
-			~Reminder();
+		String* reminders;
+		u16 max_reminders;
+		String last_trigger;
 
-		public:
-			bool add(const String& time);
-			bool del(const String& time);
-			bool check();
+	public:
+		Reminder(Timer *const timer, u16 max_reminders); 
+		~Reminder();
 
-		private:
-			bool is_dupe_remind(const String& time);
-			i32 find_remind(const String& time);
+	public:
+		void loop();
+		bool add(const String& time);
+		bool del(const String& time);
+		bool check();
+		const String& get_last_trigger();
+
+	private:
+		void del(u16 reminder);
+		bool is_dupe_remind(const String& time);
+		i32 find_remind(const String& time);
 	};
 };

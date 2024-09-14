@@ -2,6 +2,7 @@
 
 #include "program_data.hpp"
 #include "feeder.hpp"
+#include "netpie.hpp"
 
 namespace Program 
 {
@@ -12,18 +13,11 @@ namespace Program
 
 	class Runner {
 	private:
+		Status status;
 		const struct Data& program_data;
 
-		// netpie
-		/*
-		WiFiClient wifi_client;
-		Netpie::Client netpie_client;
-		String netpie_data;
-		*/
-
+		Netpie netpie;
 		Feeder feeder;
-
-		Status status;
 
 	public:
 		Runner(const struct Data& program_data);
@@ -33,8 +27,5 @@ namespace Program
 		void loop();
 		void end();
 		Status get_status();
-
-	private:
-		//bool send_netpie_data();
 	};
 }

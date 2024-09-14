@@ -1,68 +1,65 @@
 #include "netpie.hpp"
 
-#include <Arduino.h>
-#include <string.h>
+#define UPDATE_SHADOW_TOPIC "@shadow/data/update"
 
-#define MAX_CONNECT_RETRY_COUNT 10
+namespace Program {
+	Netpie::Netpie(const struct Data& program_data) :
+		program_data(program_data),
+		wifi_client(),
+		mqtt(this->wifi_client, program_data.MQTT_SERVER, program_data.MQTT_PORT)
+	{}
 
-namespace Netpie {
-	Client::Client(WiFiClient &wifi_client, const char* SERVER, const u16 PORT)
-		: client(wifi_client) 
-	{
-		this->client.setServer(SERVER, PORT);
-			//this->client.setCallback(callback);
+	bool Netpie::setup() {
+		if (
+			this->mqtt.connect(
+				this->program_data.MQTT_CLIENT_ID,
+				this->program_data.MQTT_USERNAME,
+				this->program_data.MQTT_PASSWORD
+				) != Mqtt::ErrorCode::NONE
+			) {
+			return false;	
+		}
+		return true;
 	}
 
-	ErrorCode Client::connect(
-		const char* CLIENT_ID,
-		const char* USERNAME,
-		const char* PASSWORD
-		) {
-		u16 retry_count = 0;
+	void Netpie::loop() {
+		this->mqtt.loop();
+	}
 
-		while (!this->client.connected()) {
-			if (retry_count >= MAX_CONNECT_RETRY_COUNT) {
-				return ErrorCode::CONNECT_FAIL;
-			}
-			if (this->client.connect(CLIENT_ID, USERNAME, PASSWORD)) {
-				this->connected = true;
-				return ErrorCode::NONE;
-			}
+	void Netpie::end() {
+		this->mqtt.disconnect();
+	}
 
-			retry_count++;
-			delay(500);
+	bool Netpie::handle_food_discharge_request(void* param) {
+		u8 food_remaining = *((u8*)param);
+		String json_data = 
+			"{\"data\": {\"food_remaining\": " + String(food_remaining) + "}}";
+		char msg[json_data.length() + 1];
+		json_data.toCharArray(msg, sizeof(msg));
+
+		if (
+			this->mqtt.send_data(
+				UPDATE_SHADOW_TOPIC,
+				msg
+				) != Mqtt::ErrorCode::NONE
+			) {
+			return false;
 		}
 
-		// should not reach this point but if does assume failer
-		return ErrorCode::CONNECT_FAIL;
+		return true;
 	}
 
-	void Client::disconnect() {
-		this->client.disconnect(); 
-		this->connected = false;
-	}
-
-	ErrorCode Client::send_data(const char* topic, const char* payload) {
-		if (!this->client.publish(topic, payload))  {
-			return ErrorCode::SEND_DATA_FAIL;
+	bool Netpie::request(NetpieRequest request, void* param) {
+		switch (request) {
+			case NetpieRequest::FODD_DISCHARGE:
+				if (!handle_food_discharge_request(param)) {
+					return false;
+				}
+				break;
+			default:
+				break;
 		}
 
-		return ErrorCode::NONE;
+		return true;
 	}
-	
-	void Client::loop() { this->client.loop(); }
 }
-
-/*
-void Netpie::Client::callback(char* topic, byte* payload, uint length) 
-{
-	Serial.print("Recv message topic - ");
-	Serial.println(topic);
-
-	// print the message
-	for (uint i = 0; i < length; i++) {
-		Serial.print((char)payload[i]);
-	}
-	Serial.println();
-}
-*/

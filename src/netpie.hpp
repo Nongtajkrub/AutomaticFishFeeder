@@ -1,35 +1,32 @@
-#include "type.hpp"
+#pragma once
 
-#include <ESP8266WiFi.h>
-#include <PubSubClient.h>
+#include "program_data.hpp"
+#include "mqtt.hpp"
 
-namespace Netpie {
-	enum class ErrorCode : u8 {
+namespace Program {
+	enum class NetpieRequest {
 		NONE,
-		CONNECT_FAIL,
-		SEND_DATA_FAIL
+		FODD_DISCHARGE,
+		FOOD_EMPTY_WARNING
 	};
 
-	class Client {
+	class Netpie{
 	private:
-		PubSubClient client;
-		bool connected;
+		const struct Data& program_data;
+		WiFiClient wifi_client;
+		Mqtt::Client mqtt;
 
 	public:
-		Client(WiFiClient &wifi_client, const char* SERVER, const u16 PORT);
-		~Client() = default;
+		Netpie(const struct Data& program_data);
+		~Netpie() = default;
 
 	public:
-		ErrorCode connect(
-			const char* CLIENT_ID, 
-			const char* USERNAME, 
-			const char* PASSWORD
-			);
-		void disconnect();
-		ErrorCode send_data(const char* topic, const char* payload);
+		bool setup();
 		void loop();
-		
+		void end();
+		bool request(NetpieRequest request, void* param);
+
 	private:
-			//static void callback(char* topic, byte* payload, uint length);
+		bool handle_food_discharge_request(void* param);
 	};
 }

@@ -12,13 +12,14 @@ namespace Time {
 		SECOND
 	};
 
-	class NTPTimer : private NTPClient {
+	class Timer : private NTPClient {
 		public:
-			NTPTimer(WiFiUDP& udp, const char* pool, long offset); 
-			~NTPTimer() = default;
+			Timer(WiFiUDP& udp, const char* pool, long offset); 
+			~Timer() = default;
 
 		public:
 			String time(Unit unit);
+			u8 day();
 			void print(Unit unit);
 	};
 };

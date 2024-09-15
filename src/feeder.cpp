@@ -30,15 +30,19 @@ namespace Program {
 		for (u8 i = 0; i < this->discharge_per_session; i++) {
 			if (is_low_food()) {
 				this->status = FeederStatus::LOW_FOOD;
-				this->netpie.request(
+				this->netpie.request<bool>(
 					NetpieRequest::FOOD_EMPTY_WARNING,
-					NULL
+					true
 					);
 				break;
 			}
-			Serial.println("Feeding");
 			feed();
 		}
+
+		this->netpie.request<u8>(
+			NetpieRequest::FODD_DISCHARGE,
+			this->food_remaining
+			);
 	}
 
 	void Feeder::add_reminders(const Data& program_data) {
@@ -60,8 +64,6 @@ namespace Program {
 	}
 
 	void Feeder::feed() {
-		// TODO: Implement a more efficient way of sending data to netpie 
-		// instead of doing it everytime this function is call
 		this->servo_controler.turn(
 			this->servo_discharge_angle,
 			MyServo::Mode::TOURQE
@@ -70,11 +72,6 @@ namespace Program {
 
 		this->food_remaining -= (u8)round(
 			(f32)DEF_FOOD_CAPACITY / (f32)this->feeding_before_empty
-			);
-		Serial.println(this->food_remaining);
-		netpie.request(
-			NetpieRequest::FODD_DISCHARGE,
-			(void*)&this->food_remaining
 			);
 	}
 

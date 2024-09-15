@@ -24,9 +24,25 @@ namespace Program {
 		bool setup();
 		void loop();
 		void end();
-		bool request(NetpieRequest request, void* param);
+
+		template<typename T>
+		bool request(NetpieRequest request, T param) {
+			switch (request) {
+				case NetpieRequest::FODD_DISCHARGE:
+					if (!handle_food_discharge_request(param)) {
+						return false;
+					}
+					break;
+				default:
+					break;
+			}
+
+			return true;
+		}
 
 	private:
-		bool handle_food_discharge_request(void* param);
+		inline bool send_data_to_netpie(const char* topic, const char* payload);
+		bool handle_food_discharge_request(u8 food_remaining);
+		bool handle_food_empty_wanring_request(bool is_low_food);
 	};
 }

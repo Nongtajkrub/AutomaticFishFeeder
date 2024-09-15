@@ -17,7 +17,7 @@ namespace Program {
 				this->program_data.MQTT_PASSWORD
 				) != Mqtt::ErrorCode::NONE
 			) {
-			return false;	
+			return false;
 		}
 		return true;
 	}
@@ -30,36 +30,37 @@ namespace Program {
 		this->mqtt.disconnect();
 	}
 
-	bool Netpie::handle_food_discharge_request(void* param) {
-		u8 food_remaining = *((u8*)param);
+	// if fail return false
+	inline bool Netpie::send_data_to_netpie(
+		const char* topic,
+		const char* payload
+		) {
+		return (this->mqtt.send_data(topic, payload) != Mqtt::ErrorCode::NONE); 
+	}
+
+	bool Netpie::handle_food_discharge_request(u8 food_remaining) {
 		String json_data = 
 			"{\"data\": {\"food_remaining\": " + String(food_remaining) + "}}";
 		char msg[json_data.length() + 1];
 		json_data.toCharArray(msg, sizeof(msg));
 
-		if (
-			this->mqtt.send_data(
-				UPDATE_SHADOW_TOPIC,
-				msg
-				) != Mqtt::ErrorCode::NONE
-			) {
+		if (!send_data_to_netpie(UPDATE_SHADOW_TOPIC, msg)) {
 			return false;
 		}
-
 		return true;
 	}
 
-	bool Netpie::request(NetpieRequest request, void* param) {
-		switch (request) {
-			case NetpieRequest::FODD_DISCHARGE:
-				if (!handle_food_discharge_request(param)) {
-					return false;
-				}
-				break;
-			default:
-				break;
-		}
+	bool Netpie::handle_food_empty_wanring_request(bool is_low_food) {
+		String json_data =
+			"{\"data\": {\"food_low\":" +
+				String((is_low_food) ? "true" : "false") +
+					"}}";
+		char msg[json_data.length() + 1];
+		json_data.toCharArray(msg, sizeof(msg));
 
+		if (!send_data_to_netpie(UPDATE_SHADOW_TOPIC, msg)) {
+			return false;
+		}
 		return true;
 	}
 }

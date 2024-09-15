@@ -17,6 +17,7 @@
 static void setup_wifi(const char* SSID, const char* PASS) {
     WiFi.begin(SSID, PASS);
     while (WiFi.status() != WL_CONNECTED) {
+		Serial.println("Connecting to Wifi");
 		delay(500);
     }
 }
@@ -52,7 +53,6 @@ void setup() {
 	Serial.println("WiFi connected");
 
 	program_runner.setup();
-	Serial.println("Netpie connected");
 }
 
 void loop() {

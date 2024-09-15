@@ -10,7 +10,11 @@ namespace Program {
 	{}
 	
 	void Runner::setup() {
-		this->netpie.setup();
+		if (!this->netpie.setup()) {
+			Serial.println("Fail to connect to Netpie");
+		} else {
+			Serial.println("Connected to Netpie");
+		}
 	}
 
 	void Runner::loop() {

@@ -1,5 +1,10 @@
 #include "reminder.hpp"
 
+#define DEBUG(MSG) Serial.print(MSG)
+#define DEBUGLN(MSG) Serial.println(MSG)
+
+// TODO fix reminder not triggering
+
 namespace Time {
 	Reminder::Reminder(Timer *const timer, u16 max_reminders) :
 		timer(timer),
@@ -15,10 +20,20 @@ namespace Time {
 	}
 
 	void Reminder::loop() {
+		DEBUGLN("Reminder loop");
+
 		u8 new_day = this->timer->day();
+
+		DEBUG("Curent day: ");
+		DEBUGLN(this->current_day);
+		DEBUG("New day: ");
+		DEBUGLN(new_day);
+		DEBUG("Current time: ");
+		DEBUGLN(this->timer->time(Unit::MINUTE));
 
 		// the day has change
 		if (current_day != new_day) {
+			DEBUGLN("Reminder day change");
 			last_trigger.clear();
 		}
 	}
@@ -27,6 +42,7 @@ namespace Time {
 		i32 empty_reminder;
 
 		if (is_dupe_remind(time)) {
+			DEBUGLN("Fail to add fine dupe reminde");
 			return 0;
 		}
 		
@@ -34,9 +50,11 @@ namespace Time {
 		empty_reminder = find_remind("");
 		// not enough space to store new remind
 		if (empty_reminder == -1) {
+			DEBUGLN("No empty spot for remind");
 			return false;
 		} 
 
+		DEBUGLN("Reminder added reminder");
 		this->reminders[empty_reminder] = time;
 		return true;
 	}
@@ -46,24 +64,29 @@ namespace Time {
 	   
 		// the remind does not exsist cant be delete
 		if (reminder == -1) {
+			DEBUGLN("Fail to delete remind dont excist");
 			return false;
 		}
 
+
+		DEBUGLN("Reminder deleted reminder");
 		this->reminders[reminder].clear();
 		return true;
 	}
 
 	bool Reminder::check() {
+		DEBUGLN("Checking for trigger reminder");
 		i32 reminder = find_remind(this->timer->time(Unit::MINUTE));
 
 		// a reminder was trigger and have never been trigger today
 		if (reminder != -1 && this->reminders[reminder] != this->last_trigger) {
 			last_trigger = this->reminders[reminder];
-			// delete the reminder after being trigger
-			del(reminder);
+			DEBUG("Found trigger reminder: ");
+			DEBUGLN(this->last_trigger);
 			return true;
 		}
 		// no reminder was trigger
+		DEBUGLN("No trigger reminder");
 		return false;
 	}
 

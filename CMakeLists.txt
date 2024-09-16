@@ -24,7 +24,6 @@ add_executable(
 
     src/main.cpp
     src/program.cpp
-    src/timer.cpp
     src/reminder.cpp
     src/ui.cpp
     src/servo.cpp

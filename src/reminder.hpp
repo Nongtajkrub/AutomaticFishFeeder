@@ -1,34 +1,40 @@
 #pragma once
 
 #include "type.hpp"
-#include "timer.hpp"
 
 #include <Arduino.h>
+#include <NTPClient.h>
 
 namespace Time {
+	typedef struct {
+		bool is_active;
+		bool is_trigger;
+
+		u8 hour;
+		u8 minute;
+	} reminder_t;
+
 	class Reminder {
 	private:
-		Timer *const timer;
-		u8 current_day;
+		NTPClient *const timer;
 
-		String* reminders;
 		u16 max_reminders;
-		String last_trigger;
-
+		reminder_t* reminders;
+			
 	public:
-		Reminder(Timer *const timer, u16 max_reminders); 
+		Reminder(NTPClient *const timer, u16 max_reminders); 
 		~Reminder();
 
 	public:
 		void loop();
-		bool add(const String& time);
-		bool del(const String& time);
+		bool add(u8 hour, u8 minute);
+		bool del(u8 hour, u8 minute);
 		bool check();
-		const String& get_last_trigger();
 
 	private:
-		void del(u16 reminder);
-		bool is_dupe_remind(const String& time);
-		i32 find_remind(const String& time);
+		void del(u16 index);
+		bool is_dupe_remind(u8 hour, u8 minute);
+		i32 find_reminder(u8 hour, u8 minute);
+		i32 find_inactive_reminder();
 	};
 };

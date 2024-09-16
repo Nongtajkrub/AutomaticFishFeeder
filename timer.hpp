@@ -18,8 +18,7 @@ namespace Time {
 			~Timer() = default;
 
 		public:
-			String time(Unit unit);
-			u8 day();
+			String string_time(Unit unit);
 			void print(Unit unit);
 	};
 };

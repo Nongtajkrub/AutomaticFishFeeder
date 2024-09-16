@@ -1,18 +1,11 @@
 #include "reminder.hpp"
 
-#define DEBUG(MSG) Serial.print(MSG)
-#define DEBUGLN(MSG) Serial.println(MSG)
-
-// TODO fix reminder not triggering
-
 namespace Time {
-	Reminder::Reminder(Timer *const timer, u16 max_reminders) :
+	Reminder::Reminder(NTPClient *const timer, u16 max_reminders) :
 		timer(timer),
-		max_reminders(max_reminders),
-		current_day(this->timer->day()),
-		last_trigger("")
+		max_reminders(max_reminders)
 	{
-		this->reminders = new String[max_reminders];
+		this->reminders = new reminder_t[max_reminders];
 	}
 
 	Reminder::~Reminder() {
@@ -20,91 +13,83 @@ namespace Time {
 	}
 
 	void Reminder::loop() {
-		DEBUGLN("Reminder loop");
-
-		u8 new_day = this->timer->day();
-
-		DEBUG("Curent day: ");
-		DEBUGLN(this->current_day);
-		DEBUG("New day: ");
-		DEBUGLN(new_day);
-		DEBUG("Current time: ");
-		DEBUGLN(this->timer->time(Unit::MINUTE));
-
-		// the day has change
-		if (current_day != new_day) {
-			DEBUGLN("Reminder day change");
-			last_trigger.clear();
-		}
+		this->timer->update();
 	}
 
-	bool Reminder::add(const String& time) {
-		i32 empty_reminder;
+	bool Reminder::add(u8 hour, u8 minute) {
+		i32 inactive_reminder;
 
-		if (is_dupe_remind(time)) {
-			DEBUGLN("Fail to add fine dupe reminde");
+		if (is_dupe_remind(hour, minute)) {
 			return 0;
 		}
 		
-		// look for empty space in remind to store new remind
-		empty_reminder = find_remind("");
+		inactive_reminder = find_inactive_reminder();
 		// not enough space to store new remind
-		if (empty_reminder == -1) {
-			DEBUGLN("No empty spot for remind");
+		if (inactive_reminder == -1) {
 			return false;
 		} 
 
-		DEBUGLN("Reminder added reminder");
-		this->reminders[empty_reminder] = time;
+		reminder_t new_reminder = {
+			.is_active = true,
+			.is_trigger = false,
+			.hour = hour,
+			.minute = minute
+		};
+		this->reminders[inactive_reminder] = new_reminder;
 		return true;
 	}
 
-	bool Reminder::del(const String& time) {
-		i32 reminder = find_remind(time);
+	bool Reminder::del(u8 hour, u8 minute) {
+		i32 reminder = find_reminder(hour, minute);
 	   
 		// the remind does not exsist cant be delete
 		if (reminder == -1) {
-			DEBUGLN("Fail to delete remind dont excist");
 			return false;
 		}
 
 
-		DEBUGLN("Reminder deleted reminder");
-		this->reminders[reminder].clear();
+		this->reminders[reminder].is_active = false;
 		return true;
 	}
 
 	bool Reminder::check() {
-		DEBUGLN("Checking for trigger reminder");
-		i32 reminder = find_remind(this->timer->time(Unit::MINUTE));
+		i32 reminder = find_reminder(
+			this->timer->getHours(),
+			this->timer->getMinutes()
+			);
 
-		// a reminder was trigger and have never been trigger today
-		if (reminder != -1 && this->reminders[reminder] != this->last_trigger) {
-			last_trigger = this->reminders[reminder];
-			DEBUG("Found trigger reminder: ");
-			DEBUGLN(this->last_trigger);
+		if (reminder != -1) {
+			del(reminder);
 			return true;
 		}
 		// no reminder was trigger
-		DEBUGLN("No trigger reminder");
 		return false;
 	}
 
-	const String& Reminder::get_last_trigger() {
-		return this->last_trigger;
+	void Reminder::del(u16 index) {
+		this->reminders[index].is_active = false;
 	}
 
-	void Reminder::del(u16 reminder) {
-		this->reminders[reminder].clear();
+	bool Reminder::is_dupe_remind(u8 hour, u8 minute) {
+		return (find_reminder(hour, minute) != -1);
 	}
 
-	bool Reminder::is_dupe_remind(const String& time) {
-		return (find_remind(time) != -1);
-	}
-
-	i32 Reminder::find_remind(const String& time) {
+	i32 Reminder::find_reminder(u8 hour, u8 minute) {
 		for (u16 i = 0; i < this->max_reminders; i++) {
-			if (this->reminders[i] == time) {
+			if (this->reminders[i].is_active &&
+				this->reminders[i].hour == hour &&
+				this->reminders[i].minute == minute
+				) {
+				return i;
+			}
+		}
+
+		return -1;
+	}
+
+	i32 Reminder::find_inactive_reminder() {
+		for (u16 i = 0; i < this->max_reminders; i++) {
+			if (!this->reminders[i].is_active) {
 				return i;
 			}
 		}

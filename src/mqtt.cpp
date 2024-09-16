@@ -51,17 +51,3 @@ namespace Mqtt {
 	
 	void Client::loop() { this->client.loop(); }
 }
-
-/*
-void Netpie::Client::callback(char* topic, byte* payload, uint length) 
-{
-	Serial.print("Recv message topic - ");
-	Serial.println(topic);
-
-	// print the message
-	for (uint i = 0; i < length; i++) {
-		Serial.print((char)payload[i]);
-	}
-	Serial.println();
-}
-*/

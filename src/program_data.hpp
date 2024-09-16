@@ -1,6 +1,7 @@
 #pragma once
 
-#include "timer.hpp"
+#include "type.hpp"
+#include <NTPClient.h>
 
 namespace Program {
 	struct Data {
@@ -11,17 +12,19 @@ namespace Program {
 		const char* MQTT_PASSWORD;
 		const u16 MQTT_PORT;
 
+		// timer
+		NTPClient *const NTP_CLIENT;
+
 		// feeder
 		const u8 EMPTY_THRESHOLD;
 		const u8 DISCHARGE_PER_SESSION;
 		const u16 FEEDING_BEFORE_EMPTY;
 		const u16 SERVO_DISCHARGE_ANGLE;
 		const u8 SERVO_PIN;
-		Time::Timer *const TIMER;
-		const char* FEEDING_TIME1;
-		const char* FEEDING_TIME2;
-		const char* FEEDING_TIME3;
-		const char* FEEDING_TIME4;
-		const char* FEEDING_TIME5;
+		const u8 FEEDING_TIME1[2];
+		const u8 FEEDING_TIME2[2];
+		const u8 FEEDING_TIME3[2];
+		const u8 FEEDING_TIME4[2];
+		const u8 FEEDING_TIME5[2];
 	};
 }

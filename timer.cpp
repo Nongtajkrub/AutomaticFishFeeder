@@ -7,7 +7,7 @@ namespace Time {
 		begin();
 	} 
 
-	String Timer::time(Unit unit) {
+	String Timer::string_time(Unit unit) {
 		update();
 
 		switch (unit) {
@@ -21,11 +21,7 @@ namespace Time {
 		}
 	}
 
-	u8 Timer::day(){
-		return getDay(); 
-	}
-
 	void Timer::print(Unit unit) {
-		Serial.println(time(unit));
+		update();
 	}
 }

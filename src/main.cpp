@@ -1,3 +1,6 @@
+// TODO Fix reminder activating only once
+
+// both cant be define at the same time
 #define RUN_PROGRAM
 
 #include <Arduino.h>
@@ -6,6 +9,7 @@
 
 #include "program.hpp"
 #include <ESP8266WiFi.h>
+#include <WiFiUdp.h>
 
 #define WIFI_SSID "Sunan_2.4G"
 #define WIFI_PASSWORD "0871691479"
@@ -23,7 +27,7 @@ static void setup_wifi(const char* SSID, const char* PASS) {
 }
 
 WiFiUDP udp;
-Time::Timer timer(udp, NTP_POOL, NTP_OFFSET);
+NTPClient timer(udp, NTP_POOL, NTP_OFFSET); 
 
 const struct Program::Data program_data = {
 	.MQTT_SERVER = "mqtt.netpie.io",
@@ -31,17 +35,17 @@ const struct Program::Data program_data = {
 	.MQTT_USERNAME = "ANtvbF27EuP4o1fSjkjV9p3NY7vaJzD2",
 	.MQTT_PASSWORD = "MbkYJ1ujNVJdKQxPoiN9SNKdaQcZqXvu",
 	.MQTT_PORT = 1883,
+	.NTP_CLIENT = &timer,
 	.EMPTY_THRESHOLD = 20,
 	.DISCHARGE_PER_SESSION = 3,
 	.FEEDING_BEFORE_EMPTY = 10,
 	.SERVO_DISCHARGE_ANGLE = 90,
 	.SERVO_PIN = 13,
-	.TIMER = &timer,
-	.FEEDING_TIME1 = "19:03",
-	.FEEDING_TIME2 = "19:05",
-	.FEEDING_TIME3 = "19:07",
-	.FEEDING_TIME4 = NULL,
-	.FEEDING_TIME5 = NULL
+	.FEEDING_TIME1 = {20, 30},
+	.FEEDING_TIME2 = {20, 31},
+	.FEEDING_TIME3 = {20, 32},
+	.FEEDING_TIME4 = {255, 255},
+	.FEEDING_TIME5 = {255, 255}
 };
 
 Program::Runner program_runner(program_data);
@@ -77,4 +81,4 @@ void loop() {
 	delay(1000);	
 }
 
-#endif // #ifndef RUN_PROGRAM
+#endif // #ifndef RUN_PROGRAM/

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "program_data.hpp"
-#include "servo.hpp"
 #include "reminder.hpp"
+#include "servo.hpp"
 #include "netpie.hpp"
 #include "type.hpp"
 
@@ -39,7 +39,7 @@ namespace Program {
 		void loop();
 
 	private:
-		void add_reminders(const Data& program_data);
+		void add_reminder(const u8 feeding_time[2]);
 		void feed();
 		bool is_low_food();
 	};

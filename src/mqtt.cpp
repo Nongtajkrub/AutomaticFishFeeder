@@ -49,5 +49,11 @@ namespace Mqtt {
 		return ErrorCode::NONE;
 	}
 	
-	void Client::loop() { this->client.loop(); }
+	void Client::loop() {
+		this->client.loop(); 
+	}
+
+	bool Client::is_connect() {
+		return this->client.connected();
+	}
 }

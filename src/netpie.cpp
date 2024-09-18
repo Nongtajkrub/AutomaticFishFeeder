@@ -35,7 +35,7 @@ namespace Program {
 		const char* topic,
 		const char* payload
 		) {
-		return (this->mqtt.send_data(topic, payload) != Mqtt::ErrorCode::NONE); 
+		return (this->mqtt.send_data(topic, payload) == Mqtt::ErrorCode::NONE); 
 	}
 
 	bool Netpie::handle_food_discharge_request(u8 food_remaining) {

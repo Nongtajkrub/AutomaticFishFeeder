@@ -28,5 +28,6 @@ namespace Mqtt {
 		void disconnect();
 		ErrorCode send_data(const char* topic, const char* payload);
 		void loop();
+		bool is_connect();
 	};
 }

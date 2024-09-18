@@ -1,6 +1,5 @@
-// TODO Fix reminder activating only once
+// TODO Fix Netpie getting disconnect when servo activate
 
-// both cant be define at the same time
 #define RUN_PROGRAM
 
 #include <Arduino.h>
@@ -44,8 +43,8 @@ const struct Program::Data program_data = {
 	.FEEDING_TIME1 = {20, 30},
 	.FEEDING_TIME2 = {20, 31},
 	.FEEDING_TIME3 = {20, 32},
-	.FEEDING_TIME4 = {255, 255},
-	.FEEDING_TIME5 = {255, 255}
+	.FEEDING_TIME4 = {NO_TIME, NO_TIME},
+	.FEEDING_TIME5 = {NO_TIME, NO_TIME}
 };
 
 Program::Runner program_runner(program_data);

@@ -14,6 +14,8 @@ namespace Program {
 
 	class Feeder {
 	private:
+		const struct Data& program_data;
+
 		FeederStatus status;
 
 		u8 food_remaining;
@@ -36,6 +38,7 @@ namespace Program {
 		~Feeder() = default;
 	
 	public:
+		void setup();
 		void loop();
 
 	private:

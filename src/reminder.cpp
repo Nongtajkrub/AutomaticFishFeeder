@@ -5,7 +5,7 @@ namespace Time {
 		timer(timer),
 		max_reminders(max_reminders)
 	{
-		this->reminders = new reminder_t[max_reminders];
+		this->reminders = new reminder_t[max_reminders]();
 	}
 
 	Reminder::~Reminder() {
@@ -14,13 +14,19 @@ namespace Time {
 
 	void Reminder::loop() {
 		this->timer->update();
+
+		if (this->timer->getHours() == 0 && this->timer->getMinutes() == 0) {
+			for (u16 i = 0; i < this->max_reminders; i++) {
+				this->reminders[i].is_trigger = false;
+			}
+		}
 	}
 
 	bool Reminder::add(u8 hour, u8 minute) {
 		i32 inactive_reminder;
 
 		if (is_dupe_remind(hour, minute)) {
-			return 0;
+			return false;
 		}
 		
 		inactive_reminder = find_inactive_reminder();
@@ -47,7 +53,6 @@ namespace Time {
 			return false;
 		}
 
-
 		this->reminders[reminder].is_active = false;
 		return true;
 	}
@@ -58,8 +63,8 @@ namespace Time {
 			this->timer->getMinutes()
 			);
 
-		if (reminder != -1) {
-			del(reminder);
+		if (reminder != -1 && !this->reminders[reminder].is_trigger) {
+			this->reminders[reminder].is_trigger = true;
 			return true;
 		}
 		// no reminder was trigger

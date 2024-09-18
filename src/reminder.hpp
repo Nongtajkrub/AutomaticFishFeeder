@@ -5,6 +5,8 @@
 #include <Arduino.h>
 #include <NTPClient.h>
 
+#define NO_TIME 255
+
 namespace Time {
 	typedef struct {
 		bool is_active;

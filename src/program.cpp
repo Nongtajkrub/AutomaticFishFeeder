@@ -15,6 +15,7 @@ namespace Program {
 		} else {
 			Serial.println("Connected to Netpie");
 		}
+		feeder.setup();
 	}
 
 	void Runner::loop() {

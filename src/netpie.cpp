@@ -24,6 +24,14 @@ namespace Program {
 
 	void Netpie::loop() {
 		this->mqtt.loop();
+
+		if (!this->mqtt.is_connect()) {
+			this->mqtt.connect(
+				this->program_data.MQTT_CLIENT_ID,
+				this->program_data.MQTT_USERNAME,
+				this->program_data.MQTT_PASSWORD
+				);
+		};
 	}
 
 	void Netpie::end() {

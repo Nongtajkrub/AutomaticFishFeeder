@@ -26,33 +26,14 @@ namespace Program {
 	}
 
 	void Feeder::loop() {
-		reminder.loop();
+		this->reminder.loop();
 
 		// do nothing if no reminder is trigger
-		if (!reminder.check()) {
+		if (!this->reminder.check()) {
 			return;
-		}
-
-		// discharge food
-		for (u8 i = 0; i < this->discharge_per_session; i++) {
-			if (is_low_food()) {
-				this->status = FeederStatus::LOW_FOOD;
-				this->netpie.request<bool>(
-					NetpieRequest::FOOD_EMPTY_WARNING,
-					true
-					);
-				break;
-			}
-			Serial.println("Feeding");
+		} else {
 			feed();
 		}
-
-		if (!this->netpie.request<u8>(
-				NetpieRequest::FODD_DISCHARGE,
-				this->food_remaining
-				)
-			) {
-		};
 	}
 
 	void Feeder::add_reminder(const u8 feeding_time[2]) {
@@ -61,21 +42,55 @@ namespace Program {
 		}
 	}
 
-	void Feeder::feed() {
-		/*
+	bool Feeder::is_low_food() {
+		return (this->food_remaining <= empty_threshold);
+	}
+
+	void Feeder::discharge_food() {
 		this->servo_controler.turn(
 			this->servo_discharge_angle,
 			MyServo::Mode::TOURQE
 			);
-		this->servo_controler.turn(0, MyServo::Mode::SPEED);
-		*/
-
-		this->food_remaining -= (u8)round(
-			(f32)DEF_FOOD_CAPACITY / (f32)this->feeding_before_empty
-			);
+		this->netpie.loop(); // prevent losing connection with netpie
+		this->servo_controler.turn(0, MyServo::Mode::TOURQE);
 	}
 
-	bool Feeder::is_low_food() {
-		return (this->food_remaining < empty_threshold);
+	u8 Feeder::calculate_food_lose() {
+		i8 food_lose;
+
+		food_lose = (i8)round(
+			(f32)DEF_FOOD_CAPACITY / (f32)this->feeding_before_empty
+			);
+		if (food_lose < 0) {
+			food_lose = 0;
+		}
+
+		return food_lose;
+	}
+
+	void Feeder::feed() {
+		for (u8 i = 0; i < this->discharge_per_session; i++) {
+			if (this->food_remaining == 0) {
+				Serial.println("Food empty");
+				break;
+			}
+
+			if (is_low_food()) {
+				Serial.println("Food Low");
+				this->status = FeederStatus::LOW_FOOD;
+				this->netpie.request<bool>(
+					NetpieRequest::FOOD_EMPTY_WARNING,
+					true
+					);
+			}
+			discharge_food();
+			this->food_remaining -= calculate_food_lose();
+			Serial.println("Fed");
+		}
+
+		this->netpie.request<u8>(
+			NetpieRequest::FODD_DISCHARGE,
+			this->food_remaining
+			);
 	}
 }

@@ -33,6 +33,11 @@ namespace Program {
 						return false;
 					}
 					break;
+				case NetpieRequest::FOOD_EMPTY_WARNING:
+					if (!handle_food_empty_wanring_request(param)) {
+						return false;
+					}
+					break;
 				default:
 					break;
 			}

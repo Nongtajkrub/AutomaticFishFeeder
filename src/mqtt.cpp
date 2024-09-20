@@ -1,6 +1,7 @@
 #include "mqtt.hpp"
 
 #include <Arduino.h>
+#include <cstring>
 
 #define MAX_CONNECT_RETRY_COUNT 10
 
@@ -42,9 +43,16 @@ namespace Mqtt {
 	}
 
 	ErrorCode Client::send_data(const char* topic, const char* payload) {
+		if (strcmp(payload, this->old_payload.c_str()) == 0) {
+			return ErrorCode::NONE;
+		}
 		if (!this->client.publish(topic, payload))  {
 			return ErrorCode::SEND_DATA_FAIL;
 		}
+		this->old_payload = payload;
+
+		Serial.println("A package was send ->");
+		Serial.println(payload);
 
 		return ErrorCode::NONE;
 	}

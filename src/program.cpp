@@ -1,6 +1,6 @@
 #include "program.hpp"
 
-#define LOOP_DELAY 10000
+#define LOOP_DELAY 5000
 
 namespace Program {
 	Runner::Runner(const struct Data& program_data) :

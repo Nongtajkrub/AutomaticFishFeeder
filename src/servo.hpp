@@ -12,7 +12,7 @@ namespace MyServo {
 
 	class ServoControl : public Servo {
 		private:
-			u16 m_servo_degree = 0;
+			u16 servo_degree = 0;
   
 		public:
 			ServoControl();

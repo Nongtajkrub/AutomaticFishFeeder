@@ -18,7 +18,7 @@ namespace Program {
 
 		FeederStatus status;
 
-		u8 food_remaining;
+		i8 food_remaining;
 		// how much food can be left before a empty warning is trigger
 		u8 empty_threshold;
 		// how many time to discharge the food per one feeding session 
@@ -43,7 +43,9 @@ namespace Program {
 
 	private:
 		void add_reminder(const u8 feeding_time[2]);
-		void feed();
 		bool is_low_food();
+		void discharge_food();
+		u8 calculate_food_lose();
+		void feed();
 	};
 }

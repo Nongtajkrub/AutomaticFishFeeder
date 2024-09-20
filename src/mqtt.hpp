@@ -14,6 +14,7 @@ namespace Mqtt {
 	private:
 		PubSubClient client;
 		bool connected;
+		String old_payload;
 
 	public:
 		Client(WiFiClient &wifi_client, const char* SERVER, const u16 PORT);

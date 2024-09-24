@@ -32,6 +32,7 @@ namespace Time {
 		bool add(u8 hour, u8 minute);
 		bool del(u8 hour, u8 minute);
 		bool check();
+		void check(i32& index_buf);
 
 	private:
 		void del(u16 index);

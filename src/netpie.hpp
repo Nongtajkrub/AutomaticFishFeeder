@@ -1,3 +1,6 @@
+// if you look at this system and think that it is over complcated.
+// it was originally design for a more complicated situation than this.
+
 #pragma once
 
 #include "program_data.hpp"
@@ -6,19 +9,17 @@
 namespace Program {
 	enum class NetpieRequest {
 		NONE,
-		FODD_DISCHARGE,
-		FOOD_LOW_WARNING,
-		FOOD_EMPTY_WARNING
+		FODD_DISCHARGE
 	};
 
 	class Netpie{
 	private:
-		const struct Data& program_data;
+		const struct NetpieData& netpie_data;
 		WiFiClient wifi_client;
 		Mqtt::Client mqtt;
 
 	public:
-		Netpie(const struct Data& program_data);
+		Netpie(const struct NetpieData& netpie_data);
 		~Netpie() = default;
 
 	public:
@@ -34,16 +35,6 @@ namespace Program {
 						return false;
 					}
 					break;
-				case NetpieRequest::FOOD_LOW_WARNING:
-					if (!handle_food_low_warning_request(param)) {
-						return false;
-					}
-					break;
-				case NetpieRequest::FOOD_EMPTY_WARNING:
-					if (!handle_food_empty_warning_request(param)) {
-						return false;
-					}
-					break;
 				default:
 					break;
 			}
@@ -53,8 +44,8 @@ namespace Program {
 
 	private:
 		inline bool send_data_to_netpie(const char* topic, const char* payload);
+		bool handle_set_refill_time_request(u8 refill_time[2]);
+		bool handle_low_food_threshold_request(u8 threshold);
 		bool handle_food_discharge_request(u8 food_remaining);
-		bool handle_food_low_warning_request(bool is_low_food);
-		bool handle_food_empty_warning_request(bool is_food_empty);
 	};
 }

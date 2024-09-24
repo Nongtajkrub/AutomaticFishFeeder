@@ -27,22 +27,26 @@ WiFiUDP udp;
 NTPClient timer(udp, NTP_POOL, NTP_OFFSET); 
 
 const struct Program::Data program_data = {
-	.MQTT_SERVER = "mqtt.netpie.io",
-	.MQTT_CLIENT_ID = "383154ff-145e-4508-aaca-30283a119218",
-	.MQTT_USERNAME = "ANtvbF27EuP4o1fSjkjV9p3NY7vaJzD2",
-	.MQTT_PASSWORD = "MbkYJ1ujNVJdKQxPoiN9SNKdaQcZqXvu",
-	.MQTT_PORT = 1883,
-	.NTP_CLIENT = &timer,
-	.EMPTY_THRESHOLD = 20,
-	.DISCHARGE_PER_SESSION = 3,
-	.FEEDING_BEFORE_EMPTY = 20,
-	.SERVO_DISCHARGE_ANGLE = 120,
-	.SERVO_PIN = 13,
-	.FEEDING_TIME1 = {13, 14},
-	.FEEDING_TIME2 = {13, 15},
-	.FEEDING_TIME3 = {13, 16},
-	.FEEDING_TIME4 = {255, 255},
-	.FEEDING_TIME5 = {255, 255}
+	.netpie = {
+		.MQTT_SERVER = "mqtt.netpie.io",
+		.MQTT_CLIENT_ID = "383154ff-145e-4508-aaca-30283a119218",
+		.MQTT_USERNAME = "ANtvbF27EuP4o1fSjkjV9p3NY7vaJzD2",
+		.MQTT_PASSWORD = "MbkYJ1ujNVJdKQxPoiN9SNKdaQcZqXvu",
+		.MQTT_PORT = 1883,
+	},
+	.feeder = {
+		.NTP_CLIENT = &timer,
+		.EMPTY_THRESHOLD = 20,
+		.DISCHARGE_PER_SESSION = 3,
+		.FEEDING_BEFORE_EMPTY = 20,
+		.SERVO_DISCHARGE_ANGLE = 120,
+		.SERVO_PIN = 13,
+		.REFILL_TIME = {1, 2},
+		.FEEDING_TIME1 = {13, 15},
+		.FEEDING_TIME2 = {13, 16},
+		.FEEDING_TIME3 = {255, 255},
+		.FEEDING_TIME4 = {255, 255}
+	}
 };
 
 Program::Runner program_runner(program_data);

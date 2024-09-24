@@ -3,18 +3,18 @@
 #define UPDATE_SHADOW_TOPIC "@shadow/data/update"
 
 namespace Program {
-	Netpie::Netpie(const struct Data& program_data) :
-		program_data(program_data),
+	Netpie::Netpie(const struct NetpieData& netpie_data) :
+		netpie_data(netpie_data),
 		wifi_client(),
-		mqtt(this->wifi_client, program_data.MQTT_SERVER, program_data.MQTT_PORT)
+		mqtt(this->wifi_client, netpie_data.MQTT_SERVER, netpie_data.MQTT_PORT)
 	{}
 
 	bool Netpie::setup() {
 		if (
 			this->mqtt.connect(
-				this->program_data.MQTT_CLIENT_ID,
-				this->program_data.MQTT_USERNAME,
-				this->program_data.MQTT_PASSWORD
+				this->netpie_data.MQTT_CLIENT_ID,
+				this->netpie_data.MQTT_USERNAME,
+				this->netpie_data.MQTT_PASSWORD
 				) != Mqtt::ErrorCode::NONE
 			) {
 			return false;
@@ -27,9 +27,9 @@ namespace Program {
 
 		if (!this->mqtt.is_connect()) {
 			this->mqtt.connect(
-				this->program_data.MQTT_CLIENT_ID,
-				this->program_data.MQTT_USERNAME,
-				this->program_data.MQTT_PASSWORD
+				this->netpie_data.MQTT_CLIENT_ID,
+				this->netpie_data.MQTT_USERNAME,
+				this->netpie_data.MQTT_PASSWORD
 				);
 		};
 	}
@@ -49,34 +49,6 @@ namespace Program {
 	bool Netpie::handle_food_discharge_request(u8 food_remaining) {
 		String json_data = 
 			"{\"data\": {\"food_remaining\": " + String(food_remaining) + "}}";
-		char msg[json_data.length() + 1];
-		json_data.toCharArray(msg, sizeof(msg));
-
-		if (!send_data_to_netpie(UPDATE_SHADOW_TOPIC, msg)) {
-			return false;
-		}
-		return true;
-	}
-
-	bool Netpie::handle_food_low_warning_request(bool is_low_food) {
-		String json_data =
-			"{\"data\": {\"food_low\":" +
-				String((is_low_food) ? "true" : "false") +
-					"}}";
-		char msg[json_data.length() + 1];
-		json_data.toCharArray(msg, sizeof(msg));
-
-		if (!send_data_to_netpie(UPDATE_SHADOW_TOPIC, msg)) {
-			return false;
-		}
-		return true;
-	}
-
-	bool Netpie::handle_food_empty_warning_request(bool is_food_empty) {
-		String json_data =
-			"{\"data\": {\"food_empty\":" +
-				String((is_food_empty) ? "true" : "false") +
-					"}}";
 		char msg[json_data.length() + 1];
 		json_data.toCharArray(msg, sizeof(msg));
 

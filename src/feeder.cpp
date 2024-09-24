@@ -2,33 +2,44 @@
 
 #define DEF_FOOD_CAPACITY 100
 #define DEF_MAX_REMIND_COUNT 5
+#define REFILL_TIME_REMINDER_INDEX 0
 
 namespace Program {
-	Feeder::Feeder(const struct Data& program_data, Netpie& netpie) :
-		program_data(program_data),
+	Feeder::Feeder(const struct FeederData& feeder_data, Netpie& netpie) :
+		feeder_data(feeder_data),
 		food_remaining(DEF_FOOD_CAPACITY),
-		low_food_threshold(program_data.EMPTY_THRESHOLD),
-		discharge_per_session(program_data.DISCHARGE_PER_SESSION),
-		feeding_before_empty(program_data.FEEDING_BEFORE_EMPTY),
-		servo_discharge_angle(program_data.SERVO_DISCHARGE_ANGLE),
+		low_food_threshold(feeder_data.EMPTY_THRESHOLD),
+		discharge_per_session(feeder_data.DISCHARGE_PER_SESSION),
+		feeding_before_empty(feeder_data.FEEDING_BEFORE_EMPTY),
+		servo_discharge_angle(feeder_data.SERVO_DISCHARGE_ANGLE),
 		servo_controler(),
-		reminder(program_data.NTP_CLIENT, DEF_MAX_REMIND_COUNT),
+		reminder(feeder_data.NTP_CLIENT, DEF_MAX_REMIND_COUNT),
 		netpie(netpie)
 	{}
 
 	void Feeder::setup() {
-		this->servo_controler.attach(program_data.SERVO_PIN);
+		this->servo_controler.attach(feeder_data.SERVO_PIN);
 		this->servo_controler.reset();
-		add_reminder(program_data.FEEDING_TIME1);
-		add_reminder(program_data.FEEDING_TIME2);
-		add_reminder(program_data.FEEDING_TIME3);
-		add_reminder(program_data.FEEDING_TIME4);
-		add_reminder(program_data.FEEDING_TIME5);
+		request_food_discharge(DEF_FOOD_CAPACITY);
+
+		add_reminder(feeder_data.REFILL_TIME);
+		add_reminder(feeder_data.FEEDING_TIME1);
+		add_reminder(feeder_data.FEEDING_TIME2);
+		add_reminder(feeder_data.FEEDING_TIME3);
+		add_reminder(feeder_data.FEEDING_TIME4);
 	}
 
 	void Feeder::loop() {
 		this->reminder.loop();
 
+		// Reach refilling time
+		i32 reminder_index_buf = -1;
+		this->reminder.check(reminder_index_buf);
+		if (reminder_index_buf == DEF_MAX_REMIND_COUNT) {
+			Serial.println("refill time ------------");
+			this->food_remaining = DEF_FOOD_CAPACITY;
+		}
+		
 		// do nothing if no reminder is trigger
 		if (!this->reminder.check()) {
 			return;
@@ -38,27 +49,9 @@ namespace Program {
 	}
 
 	void Feeder::add_reminder(const u8 feeding_time[2]) {
-		if (feeding_time[0] != 255 && feeding_time[1] != 255) {
+		if (feeding_time[0] != NO_TIME && feeding_time[1] != NO_TIME) {
 			this->reminder.add(feeding_time[0], feeding_time[1]);
 		}
-	}
-
-	bool Feeder::check_serious_warning() {
-		Serial.println("Food remaining");
-		Serial.println(this->food_remaining);
-		if (this->food_remaining == 0) {
-			Serial.println("Food empty");
-			request_food_low_warning(false);
-			request_food_empty_warning(true);
-			return false;
-		}
-
-		if (this->food_remaining <= this->low_food_threshold) {
-			Serial.println("Food low");
-			request_food_low_warning(true);
-		}
-
-		return true;
 	}
 
 	void Feeder::discharge_food() {
@@ -81,48 +74,21 @@ namespace Program {
 
 	void Feeder::feed() {
 		for (u8 i = 0; i < this->discharge_per_session; i++) {
-			if (!check_serious_warning()) {
-				return;
+			if (this->food_remaining == 0) {
+				break;
 			}
 			discharge_food();
 			calculate_food_lose();
 			Serial.println("Fed");
 		}
 
-		check_serious_warning();
 		request_food_discharge(this->food_remaining);
 	}
 
 	void Feeder::request_food_discharge(u8 food_remaining) {
-		if (this->food_remaining == food_remaining) {
-			return;
-		}
-		this->food_remaining = food_remaining;
 		this->netpie.request<i8>(
 			NetpieRequest::FODD_DISCHARGE,
 			food_remaining
-			);
-	}
-
-	void Feeder::request_food_low_warning(bool food_low) {
-		if (this->food_low == food_low) {
-			return;
-		}
-		this->food_low = food_low;
-		this->netpie.request<bool>(
-			NetpieRequest::FOOD_LOW_WARNING, 
-			food_low
-			);
-	}
-
-	void Feeder::request_food_empty_warning(bool food_empty) {
-		if (this->food_empty == food_empty) {
-			return;
-		}
-		this->food_empty = food_empty;
-		this->netpie.request<bool>(
-			NetpieRequest::FOOD_EMPTY_WARNING,
-			food_empty
 			);
 	}
 }

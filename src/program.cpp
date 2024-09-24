@@ -5,8 +5,8 @@
 namespace Program {
 	Runner::Runner(const struct Data& program_data) :
 		program_data(program_data),
-		netpie(program_data),
-		feeder(program_data, netpie)
+		netpie(program_data.netpie),
+		feeder(program_data.feeder, netpie)
 	{}
 	
 	void Runner::setup() {

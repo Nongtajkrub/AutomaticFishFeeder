@@ -71,6 +71,21 @@ namespace Time {
 		return false;
 	}
 
+	// TODO - FIX
+	void Reminder::check(i32& index_buf) {
+		i32 reminder = find_reminder(
+			this->timer->getHours(),
+			this->timer->getMinutes()
+			);
+
+		if (reminder != -1 && !this->reminders[reminder].is_trigger) {
+			this->reminders[reminder].is_trigger = true;
+			index_buf = reminder;
+		}
+		// no reminder was trigger
+		index_buf = -1;
+	}
+
 	void Reminder::del(u16 index) {
 		this->reminders[index].is_active = false;
 	}

@@ -9,7 +9,7 @@
 namespace Program {
 	class Feeder {
 	private:
-		const struct Data& program_data;
+		const struct FeederData& feeder_data;
 
 		i8 food_remaining;
 		// how much food can be left before a empty warning is trigger
@@ -31,7 +31,7 @@ namespace Program {
 		Netpie& netpie;
 
 	public:
-		Feeder(const struct Data& program_data, Netpie& netpie);
+		Feeder(const struct FeederData& feeder_data, Netpie& netpie);
 		~Feeder() = default;
 	
 	public:
@@ -41,15 +41,10 @@ namespace Program {
 	private:
 		void add_reminder(const u8 feeding_time[2]);
 
-		bool is_low_food();
-		bool check_serious_warning();
-
 		void discharge_food();
 		void calculate_food_lose();
 		void feed();
-	
+
 		void request_food_discharge(u8 food_remaining);
-		void request_food_low_warning(bool food_low);
-		void request_food_empty_warning(bool food_empty);
 	};
 }

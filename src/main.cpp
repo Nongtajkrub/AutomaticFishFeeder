@@ -1,5 +1,3 @@
-// TODO Fix Netpie getting disconnect when servo activate
-
 #define RUN_PROGRAM
 
 #include <Arduino.h>
@@ -37,14 +35,14 @@ const struct Program::Data program_data = {
 	.NTP_CLIENT = &timer,
 	.EMPTY_THRESHOLD = 20,
 	.DISCHARGE_PER_SESSION = 3,
-	.FEEDING_BEFORE_EMPTY = 10,
-	.SERVO_DISCHARGE_ANGLE = 90,
+	.FEEDING_BEFORE_EMPTY = 20,
+	.SERVO_DISCHARGE_ANGLE = 120,
 	.SERVO_PIN = 13,
-	.FEEDING_TIME1 = {20, 30},
-	.FEEDING_TIME2 = {20, 31},
-	.FEEDING_TIME3 = {20, 32},
-	.FEEDING_TIME4 = {NO_TIME, NO_TIME},
-	.FEEDING_TIME5 = {NO_TIME, NO_TIME}
+	.FEEDING_TIME1 = {13, 14},
+	.FEEDING_TIME2 = {13, 15},
+	.FEEDING_TIME3 = {13, 16},
+	.FEEDING_TIME4 = {255, 255},
+	.FEEDING_TIME5 = {255, 255}
 };
 
 Program::Runner program_runner(program_data);
@@ -64,6 +62,7 @@ void loop() {
 		Serial.println("Something went wrong!");
 		STOP_LOOP();
 	} else {
+    Serial.println("Running");
 		program_runner.loop();
 	}
 }
@@ -81,3 +80,4 @@ void loop() {
 }
 
 #endif // #ifndef RUN_PROGRAM/
+

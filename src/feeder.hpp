@@ -7,20 +7,13 @@
 #include "type.hpp"
 
 namespace Program {
-	enum class FeederStatus {
-		NORMAL,
-		LOW_FOOD
-	};
-
 	class Feeder {
 	private:
 		const struct Data& program_data;
 
-		FeederStatus status;
-
 		i8 food_remaining;
 		// how much food can be left before a empty warning is trigger
-		u8 empty_threshold;
+		u8 low_food_threshold;
 		// how many time to discharge the food per one feeding session 
 		u8 discharge_per_session;
 		// how mayny time can be the food be discharge before the feeder
@@ -28,7 +21,11 @@ namespace Program {
 		u16 feeding_before_empty;
 		// how much the servo have to turn to discharge the food
 		u16 servo_discharge_angle;
-		
+
+		// these are to prevent sending dupe data to netpie
+		bool food_low;
+		bool food_empty;
+
 		MyServo::ServoControl servo_controler;
 		Time::Reminder reminder;
 		Netpie& netpie;
@@ -43,9 +40,16 @@ namespace Program {
 
 	private:
 		void add_reminder(const u8 feeding_time[2]);
+
 		bool is_low_food();
+		bool check_serious_warning();
+
 		void discharge_food();
-		u8 calculate_food_lose();
+		void calculate_food_lose();
 		void feed();
+	
+		void request_food_discharge(u8 food_remaining);
+		void request_food_low_warning(bool food_low);
+		void request_food_empty_warning(bool food_empty);
 	};
 }

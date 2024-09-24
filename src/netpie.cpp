@@ -58,10 +58,24 @@ namespace Program {
 		return true;
 	}
 
-	bool Netpie::handle_food_empty_wanring_request(bool is_low_food) {
+	bool Netpie::handle_food_low_warning_request(bool is_low_food) {
 		String json_data =
 			"{\"data\": {\"food_low\":" +
 				String((is_low_food) ? "true" : "false") +
+					"}}";
+		char msg[json_data.length() + 1];
+		json_data.toCharArray(msg, sizeof(msg));
+
+		if (!send_data_to_netpie(UPDATE_SHADOW_TOPIC, msg)) {
+			return false;
+		}
+		return true;
+	}
+
+	bool Netpie::handle_food_empty_warning_request(bool is_food_empty) {
+		String json_data =
+			"{\"data\": {\"food_empty\":" +
+				String((is_food_empty) ? "true" : "false") +
 					"}}";
 		char msg[json_data.length() + 1];
 		json_data.toCharArray(msg, sizeof(msg));

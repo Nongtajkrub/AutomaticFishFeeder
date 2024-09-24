@@ -7,6 +7,7 @@ namespace Program {
 	enum class NetpieRequest {
 		NONE,
 		FODD_DISCHARGE,
+		FOOD_LOW_WARNING,
 		FOOD_EMPTY_WARNING
 	};
 
@@ -33,8 +34,13 @@ namespace Program {
 						return false;
 					}
 					break;
+				case NetpieRequest::FOOD_LOW_WARNING:
+					if (!handle_food_low_warning_request(param)) {
+						return false;
+					}
+					break;
 				case NetpieRequest::FOOD_EMPTY_WARNING:
-					if (!handle_food_empty_wanring_request(param)) {
+					if (!handle_food_empty_warning_request(param)) {
 						return false;
 					}
 					break;
@@ -48,6 +54,7 @@ namespace Program {
 	private:
 		inline bool send_data_to_netpie(const char* topic, const char* payload);
 		bool handle_food_discharge_request(u8 food_remaining);
-		bool handle_food_empty_wanring_request(bool is_low_food);
+		bool handle_food_low_warning_request(bool is_low_food);
+		bool handle_food_empty_warning_request(bool is_food_empty);
 	};
 }

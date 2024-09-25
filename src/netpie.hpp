@@ -7,11 +7,6 @@
 #include "mqtt.hpp"
 
 namespace Program {
-	enum class NetpieRequest {
-		NONE,
-		FODD_DISCHARGE
-	};
-
 	class Netpie{
 	private:
 		const struct NetpieData& netpie_data;
@@ -27,25 +22,11 @@ namespace Program {
 		void loop();
 		void end();
 
-		template<typename T>
-		bool request(NetpieRequest request, T param) {
-			switch (request) {
-				case NetpieRequest::FODD_DISCHARGE:
-					if (!handle_food_discharge_request(param)) {
-						return false;
-					}
-					break;
-				default:
-					break;
-			}
-
-			return true;
-		}
-
+		bool set_refill_time(const Time::reminder_t& refill_time);
+		bool set_low_food_threshold(u8 threshold);
+		bool set_food_remaining(u8 food_remaining);
+	
 	private:
 		inline bool send_data_to_netpie(const char* topic, const char* payload);
-		bool handle_set_refill_time_request(u8 refill_time[2]);
-		bool handle_low_food_threshold_request(u8 threshold);
-		bool handle_food_discharge_request(u8 food_remaining);
 	};
 }

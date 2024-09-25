@@ -39,12 +39,10 @@ namespace Program {
 		void loop();
 
 	private:
-		void add_reminder(const u8 feeding_time[2]);
+		void add_reminder(const Time::reminder_t& reminder);
 
 		void discharge_food();
 		void calculate_food_lose();
 		void feed();
-
-		void request_food_discharge(u8 food_remaining);
 	};
 }

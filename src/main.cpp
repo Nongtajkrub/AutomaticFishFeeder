@@ -42,11 +42,11 @@ const struct Program::Data program_data = {
 		.FEEDING_BEFORE_EMPTY = 0,
 		.SERVO_DISCHARGE_ANGLE = 0,
 		.SERVO_PIN = 0,
-		.REFILL_TIME = {0, 0},
-		.FEEDING_TIME1 = {0, 0},
-		.FEEDING_TIME2 = {0, 0},
-		.FEEDING_TIME3 = {0, 0},
-		.FEEDING_TIME4 = {0, 0}
+		.REFILL_TIME = {.hour = 0, .minute = 0},
+		.FEEDING_TIME1 = {.hour = 0, .minute = 0},
+		.FEEDING_TIME2 = {.hour = 0, .minute = 0},
+		.FEEDING_TIME3 = {.hour = 0, .minute = 0},
+		.FEEDING_TIME4 = {.hour = 0, .minute = 0}
 	}
 };
 

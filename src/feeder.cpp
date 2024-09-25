@@ -20,7 +20,9 @@ namespace Program {
 	void Feeder::setup() {
 		this->servo_controler.attach(feeder_data.SERVO_PIN);
 		this->servo_controler.reset();
-		request_food_discharge(DEF_FOOD_CAPACITY);
+		this->netpie.set_low_food_threshold(feeder_data.EMPTY_THRESHOLD);
+		this->netpie.set_refill_time(feeder_data.REFILL_TIME);
+		this->netpie.set_food_remaining(DEF_FOOD_CAPACITY);
 
 		add_reminder(feeder_data.REFILL_TIME);
 		add_reminder(feeder_data.FEEDING_TIME1);
@@ -41,7 +43,7 @@ namespace Program {
 		// refill time reach expect refill
 		if (reminder_index == REFILL_REMINDER_INDEX) {
 			this->food_remaining = DEF_FOOD_CAPACITY;
-			request_food_discharge(this->food_remaining);
+			this->netpie.set_food_remaining(this->food_remaining);
 			this->food_low = false;
 			this->food_empty = false;
 		} else {
@@ -49,9 +51,9 @@ namespace Program {
 		}
 	}
 
-	void Feeder::add_reminder(const u8 feeding_time[2]) {
-		if (feeding_time[0] != NO_TIME && feeding_time[1] != NO_TIME) {
-			this->reminder.add(feeding_time[0], feeding_time[1]);
+	void Feeder::add_reminder(const Time::reminder_t& reminder) {
+		if (reminder.hour != NO_TIME && reminder.minute != NO_TIME) {
+			this->reminder.add(reminder.hour, reminder.minute);
 		}
 	}
 
@@ -83,13 +85,6 @@ namespace Program {
 			Serial.println("Fed");
 		}
 
-		request_food_discharge(this->food_remaining);
-	}
-
-	void Feeder::request_food_discharge(u8 food_remaining) {
-		this->netpie.request<i8>(
-			NetpieRequest::FODD_DISCHARGE,
-			food_remaining
-			);
+		this->netpie.set_food_remaining(this->food_remaining);
 	}
 }

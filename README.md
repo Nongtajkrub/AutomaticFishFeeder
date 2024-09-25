@@ -1,5 +1,5 @@
 # AutomaticFishFeeder
-Automatic fish feeder project for Kajonkietsuksa School.
+Automatic fish feeder project for Kajonkietsuksa School. I have made a lot of changes to my code but can no longer run the code since I do not have my ESP8266 nor my ESP32 anymore. There is a high chance of a bug occurring. If you need any help, please contact Taj Borthwick on line or by email at sunanborthwic@gmail.com
 
 ## Warnings ⚠
 * It is always recommended to place the fish feeder either vertically or horizontally. Turning it over will cause the components to fall out.
@@ -7,6 +7,7 @@ Automatic fish feeder project for Kajonkietsuksa School.
   * Error handling implementation is still lacking. 
   * Some systems had not been tested fully.
   * The amount of food discharged by the food discharge mechanism is still inconsistent.
+* The feeder need stable WiFi connection.
  
 ## Features
 * The feeder is design to store about 500 grams of fish food. However how much it can store will also depend on the fish food that is use.
@@ -18,7 +19,7 @@ Automatic fish feeder project for Kajonkietsuksa School.
  🔴 **This guide will be for the ArduinoIDE. I will assume that you already know the basics and have already setup the IDE to work with an ESP8266.**
 
 ### Donwload
-First step go to the [release](https://github.com/Nongtajkrub/AutomaticFishFeeder/releases/tag/v0.01-alpha) page to download the code. Download the zip name "release.rar".
+First step go to the [release](https://github.com/Nongtajkrub/AutomaticFishFeeder/releases/tag/v0.02-alpha) page to download the code. Download the zip name "release.rar".
 
 ### Dependencies
 To compile and upload the code, these dependencies are needed.
@@ -134,6 +135,3 @@ Here is where you can tweak the setting of the fish feeder. Let's go through all
 
 ### Upload
 After you are done with tweaking the settings, verify the code and upload it to your board. After looking at the behavior of the feeder, you can also further tweak the setting and reupload the code again until you are satisfied.
-
-## Conclusion
-If you need any help pls contact Taj Borthwick on line or email to sunanborthwic@gmail.com

@@ -54,8 +54,13 @@ To compile and upload the code, these dependencies are needed.
   "refill_time": ""
 }
 ```
-4. Create a trigger this will be use to trigger LineNotify
+4. Create 2 triggers.
 
+* Low food warning trigger  
+![Image of trigger settings](/assets/LowFoodTrigger.PNG)
+
+* Food empty warning trigger   
+![Image of trigger settings](/assets/FoodEmptyTrigger.png)
 
 ### Setup
 1. Create a project in ArduinoIDE call it what ever you want.

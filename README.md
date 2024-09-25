@@ -1,3 +1,5 @@
+This README is designed specifically to help my teacher.
+
 # AutomaticFishFeeder
 Automatic fish feeder project for Kajonkietsuksa School. I have made a lot of changes to my code but can no longer run the code since I do not have my ESP8266 nor my ESP32 anymore. There is a high chance of a bug occurring. If you need any help, please contact Taj Borthwick on line or by email at sunanborthwic@gmail.com
 

@@ -54,7 +54,20 @@ To compile and upload the code, these dependencies are needed.
   "refill_time": ""
 }
 ```
-4. Create 2 triggers.
+4. Create an event hook call it LineNotify. For the content of the event hook put this in.
+```json
+{
+  "body": "message={{context.msg}}",
+  "header": {
+    "Authorization": "Bearer {{context.line_token}}",
+    "Content-Type": "application/x-www-form-urlencoded"
+  },
+  "method": "POST",
+  "uri": "https://notify-api.line.me/api/notify"
+}
+```
+
+6. Create 2 triggers. Copy the setting of these 2 triggers below  
 
 * Low food warning trigger  
 ![Image of trigger settings](/assets/LowFoodTrigger.PNG)
@@ -62,7 +75,7 @@ To compile and upload the code, these dependencies are needed.
 * Food empty warning trigger   
 ![Image of trigger settings](/assets/FoodEmptyTrigger.png)
 
-### Setup
+### Code
 1. Create a project in ArduinoIDE call it what ever you want.
 2. After the project is create extract the zip you downloaded into the project directory. Incase you are confuse I am talking about the zip folder you downloaded earlier name "release.rar".
 3. Copy the code from main.cpp to your main .ino file in the project directory. The main .ino file will be name after your project name. So if your project name is "Fish" your main .ino file will be name "Fish.ino".

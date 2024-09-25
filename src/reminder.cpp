@@ -57,7 +57,7 @@ namespace Time {
 		return true;
 	}
 
-	bool Reminder::check() {
+	bool Reminder::check(i32* index_buf) {
 		i32 reminder = find_reminder(
 			this->timer->getHours(),
 			this->timer->getMinutes()
@@ -65,25 +65,16 @@ namespace Time {
 
 		if (reminder != -1 && !this->reminders[reminder].is_trigger) {
 			this->reminders[reminder].is_trigger = true;
+			if (index_buf != NULL) {
+				*index_buf = reminder;
+			}
 			return true;
 		}
 		// no reminder was trigger
-		return false;
-	}
-
-	// TODO - FIX
-	void Reminder::check(i32& index_buf) {
-		i32 reminder = find_reminder(
-			this->timer->getHours(),
-			this->timer->getMinutes()
-			);
-
-		if (reminder != -1 && !this->reminders[reminder].is_trigger) {
-			this->reminders[reminder].is_trigger = true;
-			index_buf = reminder;
+		if (index_buf != NULL) {
+			*index_buf = -1;
 		}
-		// no reminder was trigger
-		index_buf = -1;
+		return false;
 	}
 
 	void Reminder::del(u16 index) {

@@ -29,23 +29,23 @@ NTPClient timer(udp, NTP_POOL, NTP_OFFSET);
 const struct Program::Data program_data = {
 	.netpie = {
 		.MQTT_SERVER = "mqtt.netpie.io",
-		.MQTT_CLIENT_ID = "383154ff-145e-4508-aaca-30283a119218",
-		.MQTT_USERNAME = "ANtvbF27EuP4o1fSjkjV9p3NY7vaJzD2",
-		.MQTT_PASSWORD = "MbkYJ1ujNVJdKQxPoiN9SNKdaQcZqXvu",
+		.MQTT_CLIENT_ID = "ClientId",
+		.MQTT_USERNAME = "Token",
+		.MQTT_PASSWORD = "Secret",
 		.MQTT_PORT = 1883,
 	},
 	.feeder = {
 		.NTP_CLIENT = &timer,
-		.EMPTY_THRESHOLD = 20,
-		.DISCHARGE_PER_SESSION = 3,
-		.FEEDING_BEFORE_EMPTY = 20,
-		.SERVO_DISCHARGE_ANGLE = 120,
-		.SERVO_PIN = 13,
-		.REFILL_TIME = {1, 2},
-		.FEEDING_TIME1 = {13, 15},
-		.FEEDING_TIME2 = {13, 16},
-		.FEEDING_TIME3 = {255, 255},
-		.FEEDING_TIME4 = {255, 255}
+		.EMPTY_THRESHOLD = 0,
+		.DISCHARGE_PER_SESSION = 0,
+		.FEEDING_BEFORE_EMPTY = 0,
+		.SERVO_DISCHARGE_ANGLE = 0,
+		.SERVO_PIN = 0,
+		.REFILL_TIME = {0, 0},
+		.FEEDING_TIME1 = {0, 0},
+		.FEEDING_TIME2 = {0, 0},
+		.FEEDING_TIME3 = {0, 0},
+		.FEEDING_TIME4 = {0, 0}
 	}
 };
 

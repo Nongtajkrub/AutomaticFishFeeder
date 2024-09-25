@@ -22,7 +22,8 @@ namespace Time {
 
 		u16 max_reminders;
 		reminder_t* reminders;
-			
+		reminder_t temp_reminder;
+
 	public:
 		Reminder(NTPClient *const timer, u16 max_reminders); 
 		~Reminder();
@@ -31,8 +32,7 @@ namespace Time {
 		void loop();
 		bool add(u8 hour, u8 minute);
 		bool del(u8 hour, u8 minute);
-		bool check();
-		void check(i32& index_buf);
+		bool check(i32* index_buf);
 
 	private:
 		void del(u16 index);

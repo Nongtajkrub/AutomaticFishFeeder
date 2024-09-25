@@ -2,7 +2,7 @@
 
 #define DEF_FOOD_CAPACITY 100
 #define DEF_MAX_REMIND_COUNT 5
-#define REFILL_TIME_REMINDER_INDEX 0
+#define REFILL_REMINDER_INDEX 0
 
 namespace Program {
 	Feeder::Feeder(const struct FeederData& feeder_data, Netpie& netpie) :
@@ -32,17 +32,18 @@ namespace Program {
 	void Feeder::loop() {
 		this->reminder.loop();
 
-		// Reach refilling time
-		i32 reminder_index_buf = -1;
-		this->reminder.check(reminder_index_buf);
-		if (reminder_index_buf == DEF_MAX_REMIND_COUNT) {
-			Serial.println("refill time ------------");
-			this->food_remaining = DEF_FOOD_CAPACITY;
-		}
-		
-		// do nothing if no reminder is trigger
-		if (!this->reminder.check()) {
+		i32 reminder_index;
+		if (!this->reminder.check(&reminder_index)) {
+			// do nothing if no reminder is trigger
 			return;
+		}
+	
+		// refill time reach expect refill
+		if (reminder_index == REFILL_REMINDER_INDEX) {
+			this->food_remaining = DEF_FOOD_CAPACITY;
+			request_food_discharge(this->food_remaining);
+			this->food_low = false;
+			this->food_empty = false;
 		} else {
 			feed();
 		}

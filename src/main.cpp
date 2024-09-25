@@ -27,6 +27,7 @@ WiFiUDP udp;
 NTPClient timer(udp, NTP_POOL, NTP_OFFSET); 
 
 const struct Program::Data program_data = {
+	// Netpie settings
 	.netpie = {
 		.MQTT_SERVER = "mqtt.netpie.io",
 		.MQTT_CLIENT_ID = "ClientId",
